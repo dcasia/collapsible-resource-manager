@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/digital-creative/collapsible-resource-manager.svg)](https://packagist.org/packages/digital-creative/collapsible-resource-manager)
 [![License](https://img.shields.io/packagist/l/digital-creative/collapsible-resource-manager.svg)](https://github.com/digital-creative/collapsible-resource-manager/blob/master/LICENSE)
 
-![Laravel Nova Collapsible Resource Manager in action](https://github.com/dcasia/collapsible-resource-manager/screenshoots/demo-1.png)
+![Laravel Nova Collapsible Resource Manager in action](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/screenshots/demo-1.png)
 
 Provides an easy way to order and group your resources on the sidebar.
 
