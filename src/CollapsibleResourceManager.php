@@ -11,32 +11,6 @@ use Laravel\Nova\Tools\ResourceManager;
 class CollapsibleResourceManager extends Tool
 {
     /**
-     * @var string $title
-     */
-    private $title;
-
-    /**
-     * @var Collection $groups
-     */
-    private $groups;
-
-    /**
-     * @var string $icon
-     */
-    private $icon;
-
-    /**
-     * BetterMenu constructor.
-     *
-     * @param null|string $title
-     */
-    public function __construct(string $title = null)
-    {
-        $this->title = $title;
-        $this->groups = collect();
-    }
-
-    /**
      * Perform any tasks that need to happen when the tool is booted.
      *
      * @return void
@@ -46,14 +20,18 @@ class CollapsibleResourceManager extends Tool
 
         Nova::script('collapsible-resource-manager', __DIR__ . '/../dist/js/tool.js');
 
-        /**
-         * Remove the default resource manager
-         */
-        foreach (Nova::$tools as $index => $tool) {
+        if (config('collapsible-resource-manager.disable_default_resource_manage', true)) {
 
-            if ($tool instanceof ResourceManager) {
+            /**
+             * Remove the default resource manager
+             */
+            foreach (Nova::$tools as $index => $tool) {
 
-                unset(Nova::$tools[ $index ]);
+                if ($tool instanceof ResourceManager) {
+
+                    unset(Nova::$tools[ $index ]);
+
+                }
 
             }
 
@@ -69,66 +47,73 @@ class CollapsibleResourceManager extends Tool
     public function renderNavigation()
     {
         return view('collapsible-resource-manager::navigation', [
-            'groups' => $this->serializeGroups($this->groups),
-            'title' => $this->title,
-            'icon' => $this->icon,
+            'navigation' => $this->serializeGroups(config('collapsible-resource-manager.navigation')),
         ]);
     }
 
     /**
-     * @param string $icon
-     *
-     * @return $this
+     * @param array $navigation
+     * @return array
      */
-    public function icon(string $icon): self
+    private function serializeGroups(array $navigation): array
     {
-        $this->icon = $icon;
 
-        return $this;
+        foreach ($navigation as &$item) {
+
+            if (config('collapsible-resource-manager.translate_title', false)) {
+
+                $this->translateTitle($item);
+
+            }
+
+            if (isset($item[ 'groups' ])) {
+
+                $item[ 'groups' ] = $this->parseGroup($item[ 'groups' ]);
+
+            }
+
+        }
+
+        return $navigation;
+
     }
 
-    /**
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function title(string $title): self
-    {
-        $this->title = $title;
 
-        return $this;
+    private function translateTitle(array &$data)
+    {
+        if (isset($data[ 'title' ])) {
+
+            $data[ 'title' ] = trans($data[ 'title' ]);
+
+        }
     }
 
-    /**
-     * @param array $group
-     *
-     * @return $this
-     */
-    public function addGroup(array $group): self
+    private function parseGroup(array $groups): Collection
     {
-        $this->groups->push($group);
+        return collect($groups)->map(function (array $group) {
 
-        return $this;
-    }
+            if (config('collapsible-resource-manager.translate_title', false)) {
 
-    /**
-     * @param Collection $groups
-     *
-     * @return Collection
-     */
-    private function serializeGroups(Collection $groups): Collection
-    {
-        return $groups->map(function (array $group) {
+                $this->translateTitle($group);
 
-            $group[ 'resources' ] = collect($group[ 'resources' ])->map(function ($resource) {
-                return [
-                    'label' => $resource::label(),
-                    'route' => $resource::uriKey()
-                ];
-            });
+            }
+
+            $group[ 'resources' ] = collect($group[ 'resources' ])->map(function (string $resource) {
+
+                if ($resource::authorizedToViewAny(request())) {
+
+                    return [
+                        'label' => $resource::label(),
+                        'route' => $resource::uriKey()
+                    ];
+
+                }
+
+            })->filter();
 
             return $group;
 
         });
+
     }
 }

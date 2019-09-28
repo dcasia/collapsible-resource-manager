@@ -1,2 +1,5 @@
-<collapsible-resource-manager :groups='@json($groups)' title="{{ $title }}" icon="{{ $icon }}">
-</collapsible-resource-manager>
+@foreach($navigation as $group)
+
+    <collapsible-resource-manager :data='@json($group)'></collapsible-resource-manager>
+
+@endforeach
