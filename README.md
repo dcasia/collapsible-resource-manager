@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/digital-creative/collapsible-resource-manager.svg)](https://packagist.org/packages/digital-creative/collapsible-resource-manager)
 [![Total Downloads](https://img.shields.io/packagist/dt/digital-creative/collapsible-resource-manager.svg)](https://packagist.org/packages/digital-creative/collapsible-resource-manager)
-[![License](https://img.shields.io/packagist/l/digital-creative/collapsible-resource-manager.svg)](https://github.com/digital-creative/collapsible-resource-manager/blob/master/LICENSE)
+[![License](https://img.shields.io/packagist/l/dcasia/collapsible-resource-manager.svg)](https://github.com/dcasia/collapsible-resource-manager/blob/master/LICENSE)
 
 ![Laravel Nova Collapsible Resource Manager in action](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/screenshots/demo-1.png)
 
@@ -81,4 +81,4 @@ every entry to be added manually from the configuration file.
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/dcasia/collapsible-resource-manager/raw/master/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/LICENSE) for more information.
