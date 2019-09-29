@@ -70,6 +70,10 @@ class CollapsibleResourceManager extends Tool
 
                 $item[ 'groups' ] = $this->parseGroup($item[ 'groups' ]);
 
+            } else {
+
+                $item[ 'groups' ] = [];
+
             }
 
         }
