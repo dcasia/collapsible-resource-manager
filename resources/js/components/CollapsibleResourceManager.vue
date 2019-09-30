@@ -22,7 +22,7 @@
                 @click="toggleGroup(index)">
 
                 <div class="absolute collapsible-indicator">
-                    {{ activeMenu[index] ? '+' : '-' }}
+                    {{ activeMenu[index] ? '-' : '+' }}
                 </div>
 
                 {{ group.title }}
