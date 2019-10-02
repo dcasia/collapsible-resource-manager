@@ -8,6 +8,11 @@
         "collapse",
         "collapsible"
     ],
+    "authors": [
+        {
+            "name": "Rafael Milewski"
+        }
+    ],
     "license": "MIT",
     "require": {
         "php": ">=7.1.0"
