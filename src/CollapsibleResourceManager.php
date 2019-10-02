@@ -53,6 +53,7 @@ class CollapsibleResourceManager extends Tool
 
     /**
      * @param array $navigation
+     *
      * @return array
      */
     private function serializeGroups(array $navigation): array
@@ -60,21 +61,9 @@ class CollapsibleResourceManager extends Tool
 
         foreach ($navigation as &$item) {
 
-            if (config('collapsible-resource-manager.translate_title', false)) {
-
-                $this->translateTitle($item);
-
-            }
-
-            if (isset($item[ 'groups' ])) {
-
-                $item[ 'groups' ] = $this->parseGroup($item[ 'groups' ]);
-
-            } else {
-
-                $item[ 'groups' ] = [];
-
-            }
+            $item[ 'title' ] = $this->translateKey($item[ 'title' ] ?? null);
+            $item[ 'resources' ] = $this->resolveResources($item[ 'resources' ] ?? []);
+            $item[ 'groups' ] = $this->parseGroups($item[ 'groups' ] ?? []);
 
         }
 
@@ -82,38 +71,51 @@ class CollapsibleResourceManager extends Tool
 
     }
 
-
-    private function translateTitle(array &$data)
+    private function translateKey(?string $key): string
     {
-        if (isset($data[ 'title' ])) {
 
-            $data[ 'title' ] = trans($data[ 'title' ]);
+        if ($key && config('collapsible-resource-manager.translate_title', false)) {
+
+            return trans($key);
 
         }
+
+        return $key;
+
     }
 
-    private function parseGroup(array $groups): Collection
+    private function resolveResources(array $resources): Collection
     {
-        return collect($groups)->map(function (array $group) {
+        return collect($resources)->map(function (string $resource, $key) {
 
-            if (config('collapsible-resource-manager.translate_title', false)) {
+            if (!class_exists($resource)) {
 
-                $this->translateTitle($group);
+                return [
+                    'absolute' => true,
+                    'label' => is_numeric($key) ? $resource : $this->translateKey($key),
+                    'route' => $resource
+                ];
 
             }
 
-            $group[ 'resources' ] = collect($group[ 'resources' ])->map(function (string $resource) {
+            if ($resource::authorizedToViewAny(request())) {
 
-                if ($resource::authorizedToViewAny(request())) {
+                return [
+                    'label' => is_numeric($key) ? $resource::label() : $this->translateKey($key),
+                    'route' => $resource::uriKey()
+                ];
 
-                    return [
-                        'label' => $resource::label(),
-                        'route' => $resource::uriKey()
-                    ];
+            }
 
-                }
+        })->filter();
+    }
 
-            })->filter();
+    private function parseGroups(array $groups): Collection
+    {
+        return collect($groups)->map(function (array $group) {
+
+            $group[ 'title' ] = $this->translateKey($group[ 'title' ] ?? null);
+            $group[ 'resources' ] = $this->resolveResources($group[ 'resources' ] ?? []);
 
             return $group;
 

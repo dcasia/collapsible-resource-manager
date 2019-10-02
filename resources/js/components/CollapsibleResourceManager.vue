@@ -15,6 +15,8 @@
 
         </h3>
 
+        <ResourceList class="resources-only" v-if="data.resources" :resources="data.resources"/>
+
         <template v-for="(group, index) of data.groups">
 
             <h4 class="relative select-none mt-4 ml-8 text-xs text-white-50% uppercase tracking-wide cursor-pointer"
@@ -31,20 +33,7 @@
 
             <CollapseTransition :duration="150">
 
-                <ul class="list-reset" v-if="activeMenu[index]">
-
-                    <li class="leading-tight pt-4 ml-8 text-sm" v-for="resource of group.resources">
-
-                        <router-link class="text-white text-justify no-underline dim"
-                                     :to="{ name: 'index', params: { resourceName: resource.route } }">
-
-                            {{ resource.label }}
-
-                        </router-link>
-
-                    </li>
-
-                </ul>
+                <ResourceList v-if="activeMenu[index]" :resources="group.resources"/>
 
             </CollapseTransition>
 
@@ -57,10 +46,11 @@
 <script>
 
     import {CollapseTransition} from 'vue2-transitions'
+    import ResourceList from './ResourceList'
 
     export default {
         name: 'CollapsibleResourceManager',
-        components: {CollapseTransition},
+        components: {CollapseTransition, ResourceList},
         props: ['data'],
         data() {
             return {
@@ -76,7 +66,7 @@
 
 </script>
 
-<style scoped>
+<style>
 
     .collapsible-indicator {
         left: -20px;
@@ -85,6 +75,10 @@
         display: flex;
         justify-content: center;
         align-content: center;
+    }
+
+    .resources-only li:first-child {
+        padding-top: 0;
     }
 
 </style>

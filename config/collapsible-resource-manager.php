@@ -18,6 +18,12 @@ return [
         [
             'title' => 'Resource Title',
             'icon' => null, //<svg></svg> or <img src=""/>
+//            'resources' => [
+//                \App\Nova\User::class,
+//                'Custom Label' => \App\Nova\User::class,
+//                'Internal Link' => '/custom/route',
+//                'External Link' => 'https://example.com', // links starting with http opens in a new tab
+//            ],
             'groups' => [
                 [
                     'title' => 'Group Title',

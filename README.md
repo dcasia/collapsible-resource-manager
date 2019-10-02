@@ -59,12 +59,19 @@ return [
         [
             'title' => 'Resource Title',
             'icon' => null, //<svg></svg> or <img src=""/>
+            'resources' => [
+                \App\Nova\Page::class, // if passed without a key it will use the static label() function within the resource class
+                'Custom Label' => \App\Nova\Article::class,
+                'Internal Link' => '/custom/route',
+                'External Link' => 'https://example.com'
+            ],
             'groups' => [
                 [
-                    'title' => 'Group Title',
+                    'title' => 'Assets',
                     'expanded' => true,
                     'resources' => [
-                        \App\Nova\User::class,
+                        \App\Nova\Image::class,
+                        \App\Nova\Video::class,
                     ]
                 ]
             ]
