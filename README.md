@@ -45,7 +45,7 @@ return [
     /**
      * If false the default resource manager will coexist with this tool
      */
-    'disable_default_resource_manage' => true,
+    'disable_default_resource_manager' => true,
 
     /**
      * If true all titles within navigation array will pass through laravel trans helper

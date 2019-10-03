@@ -20,7 +20,7 @@ class CollapsibleResourceManager extends Tool
 
         Nova::script('collapsible-resource-manager', __DIR__ . '/../dist/js/tool.js');
 
-        if (config('collapsible-resource-manager.disable_default_resource_manage', true)) {
+        if (config('collapsible-resource-manager.disable_default_resource_manager', true)) {
 
             /**
              * Remove the default resource manager
