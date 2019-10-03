@@ -23,8 +23,20 @@
                 v-if="group.title"
                 @click="toggleGroup(index)">
 
-                <div class="absolute collapsible-indicator">
-                    {{ activeMenu[index] ? '-' : '+' }}
+                <div class="absolute flex flex-auto collapsible-indicator">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+
+                        <path v-if="activeMenu[index]"
+                              fill="currentColor"
+                              d="M16 12c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1z"/>
+
+                        <path v-else
+                              fill="currentColor"
+                              d="M13 11h2c.55 0 1 .45 1 1s-.45 1-1 1h-2v2c0 .55-.45 1-1 1s-1-.45-1-1v-2H9c-.55 0-1-.45-1-1s.45-1 1-1h2V9c0-.55.45-1 1-1s1 .45 1 1v2z"/>
+
+                    </svg>
+
                 </div>
 
                 {{ group.title }}
@@ -69,12 +81,8 @@
 <style>
 
     .collapsible-indicator {
-        left: -20px;
-        width: 12px;
-        height: 12px;
-        display: flex;
-        justify-content: center;
-        align-content: center;
+        top: -6px;
+        left: -30px;
     }
 
     .resources-only li:first-child {

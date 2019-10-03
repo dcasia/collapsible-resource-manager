@@ -101,6 +101,7 @@ class CollapsibleResourceManager extends Tool
             if ($resource::authorizedToViewAny(request())) {
 
                 return [
+                    'icon' => method_exists($resource, 'icon') ? $resource::icon() : null,
                     'label' => is_numeric($key) ? $resource::label() : $this->translateKey($key),
                     'route' => $resource::uriKey()
                 ];
