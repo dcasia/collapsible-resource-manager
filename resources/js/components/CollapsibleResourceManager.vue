@@ -1,6 +1,6 @@
 <template>
 
-    <div class="mb-8">
+    <div class="mb-8" v-if="!isEmpty">
 
         <h3 class="flex items-center font-normal text-white mb-6 text-base no-underline">
 
@@ -17,7 +17,7 @@
 
         <ResourceList class="resources-only" v-if="data.resources" :resources="data.resources"/>
 
-        <template v-for="(group, index) of data.groups">
+        <template v-for="(group, index) of data.groups" v-if="group.resources.length">
 
             <h4 class="relative select-none mt-4 ml-8 text-xs text-white-50% uppercase tracking-wide cursor-pointer"
                 v-if="group.title"
@@ -67,6 +67,11 @@
         data() {
             return {
                 activeMenu: this.data.groups.map(group => !!group.expanded)
+            }
+        },
+        computed: {
+            isEmpty() {
+                return this.data.resources.length + this.data.groups.filter(group => group.resources.length).length === 0
             }
         },
         methods: {
