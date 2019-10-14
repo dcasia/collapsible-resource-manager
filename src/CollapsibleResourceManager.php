@@ -76,7 +76,7 @@ class CollapsibleResourceManager extends Tool
 
         if ($key && config('collapsible-resource-manager.translate_title', false)) {
 
-            return trans($key);
+            return __($key);
 
         }
 
