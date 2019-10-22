@@ -61,7 +61,7 @@ class CollapsibleResourceManager extends Tool
 
         foreach ($navigation as &$item) {
 
-            $item[ 'title' ] = $this->translateKey($item[ 'title' ] ?? null);
+            $item[ 'title' ] = isset($item[ 'title' ]) ? $this->translateKey($item[ 'title' ]) : null;
             $item[ 'resources' ] = $this->resolveResources($item[ 'resources' ] ?? []);
             $item[ 'groups' ] = $this->parseGroups($item[ 'groups' ] ?? []);
 
@@ -86,7 +86,13 @@ class CollapsibleResourceManager extends Tool
 
     private function resolveResources(array $resources): Collection
     {
-        return collect($resources)->map(function (string $resource, $key) {
+        return collect($resources)->map(function ($resource, $key) {
+
+            if (is_array($resource)) {
+
+                return array_merge($this->serializeGroups([ $resource ])[ 0 ], [ 'recursive' => true ]);
+
+            }
 
             if (!class_exists($resource)) {
 
@@ -98,7 +104,7 @@ class CollapsibleResourceManager extends Tool
 
             }
 
-            if ($resource::authorizedToViewAny(request())) {
+            if ($resource::authorizedToViewAny(request()) && $resource::availableForNavigation(request())) {
 
                 return [
                     'icon' => method_exists($resource, 'icon') ? $resource::icon() : null,

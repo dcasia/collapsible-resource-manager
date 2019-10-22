@@ -1,8 +1,8 @@
 <template>
 
-    <div class="mb-8" v-if="!isEmpty">
+    <div v-if="!isEmpty" :class="{ 'mb-8': !data.recursive, 'recursive': data.recursive }">
 
-        <h3 class="flex items-center font-normal text-white mb-6 text-base no-underline">
+        <h3 class="flex items-center font-normal text-white mb-6 text-base no-underline" v-if="data.title">
 
             <div v-if="data.icon" class="sidebar-icon" v-html="data.icon"/>
 
@@ -15,11 +15,11 @@
 
         </h3>
 
-        <ResourceList class="resources-only" v-if="data.resources" :resources="data.resources"/>
+        <ResourceList class="resources-only" v-if="data.resources" :resources="data.resources" :recursive="data.recursive"/>
 
         <template v-for="(group, index) of data.groups" v-if="group.resources.length">
 
-            <h4 class="relative select-none mt-4 ml-8 text-xs text-white-50% uppercase tracking-wide cursor-pointer"
+            <h4 class="relative select-none ml-8 mt-4 text-xs text-white-50% uppercase tracking-wide cursor-pointer"
                 v-if="group.title"
                 @click="toggleGroup(index)">
 
@@ -45,7 +45,7 @@
 
             <CollapseTransition :duration="150">
 
-                <ResourceList v-if="activeMenu[index]" :resources="group.resources"/>
+                <ResourceList v-if="activeMenu[index]" :resources="group.resources" :recursive="data.recursive"/>
 
             </CollapseTransition>
 
@@ -57,13 +57,15 @@
 
 <script>
 
-    import {CollapseTransition} from 'vue2-transitions'
+    import { CollapseTransition } from 'vue2-transitions'
     import ResourceList from './ResourceList'
 
     export default {
         name: 'CollapsibleResourceManager',
-        components: {CollapseTransition, ResourceList},
-        props: ['data'],
+        components: { CollapseTransition, ResourceList },
+        props: {
+            data: { type: Object, required: true }
+        },
         data() {
             return {
                 activeMenu: this.data.groups.map(group => !!group.expanded)
@@ -76,7 +78,7 @@
         },
         methods: {
             toggleGroup(index) {
-                this.$set(this.activeMenu, index, !this.activeMenu[index])
+                this.$set(this.activeMenu, index, !this.activeMenu[ index ])
             }
         }
     }
@@ -92,6 +94,10 @@
 
     .resources-only li:first-child {
         padding-top: 0;
+    }
+
+    .recursive h4 {
+        margin-left: 0 !important;
     }
 
 </style>

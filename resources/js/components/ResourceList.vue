@@ -1,38 +1,44 @@
 <template>
 
-    <ul class="list-reset">
+    <ul class="list-reset" v-if="resources.length">
 
-        <li class="leading-tight pt-4 ml-8 text-sm" v-for="resource of resources">
+        <li class="leading-tight pt-4 text-sm" v-for="resource of resources" :class="{ 'ml-8': !recursive }">
 
-            <a v-if="resource.absolute"
-               class="relative text-white text-justify no-underline dim"
-               :href="resource.route"
-               :target="resource.route.startsWith('http') ? '_blank' : '_self'">
+            <collapsible-resource-manager v-if="resource.recursive" :data="resource" :recursive="true"/>
 
-                {{ resource.label }}
+            <template v-else>
 
-                <svg v-if="resource.route.startsWith('http')"
-                     class="absolute icon"
-                     viewBox="0 0 24 24"
-                     width="24"
-                     height="24">
+                <a v-if="resource.absolute"
+                   class="relative text-white text-justify no-underline dim"
+                   :href="resource.route"
+                   :target="resource.route.startsWith('http') ? '_blank' : '_self'">
 
-                    <path
-                        fill="currentColor"
-                        d="M19 6.41L8.7 16.71a1 1 0 1 1-1.4-1.42L17.58 5H14a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V6.41zM17 14a1 1 0 0 1 2 0v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h5a1 1 0 0 1 0 2H5v12h12v-5z"/>
+                    {{ resource.label }}
 
-                </svg>
+                    <svg v-if="resource.route.startsWith('http')"
+                         class="absolute icon"
+                         viewBox="0 0 24 24"
+                         width="24"
+                         height="24">
 
-            </a>
+                        <path
+                            fill="currentColor"
+                            d="M19 6.41L8.7 16.71a1 1 0 1 1-1.4-1.42L17.58 5H14a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V6.41zM17 14a1 1 0 0 1 2 0v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h5a1 1 0 0 1 0 2H5v12h12v-5z"/>
 
-            <router-link v-else class="relative text-white text-justify no-underline dim"
-                         :to="{ name: 'index', params: { resourceName: resource.route } }">
+                    </svg>
 
-                <div v-if="resource.icon" class="absolute icon flex" v-html="resource.icon"/>
+                </a>
 
-                {{ resource.label }}
+                <router-link v-else class="relative text-white text-justify no-underline dim"
+                             :to="{ name: 'index', params: { resourceName: resource.route } }">
 
-            </router-link>
+                    <div v-if="resource.icon" class="absolute icon flex" v-html="resource.icon"/>
+
+                    {{ resource.label }}
+
+                </router-link>
+
+            </template>
 
         </li>
 
@@ -44,7 +50,10 @@
 
     export default {
         name: 'ResourceList',
-        props: ['resources']
+        props: {
+            resources: { type: Array, required: true },
+            recursive: { type: Boolean, default: false }
+        }
     }
 
 </script>
