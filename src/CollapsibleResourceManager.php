@@ -47,6 +47,7 @@ class CollapsibleResourceManager extends Tool
     public function renderNavigation()
     {
         return view('collapsible-resource-manager::navigation', [
+            'rememberMenuState' => config('collapsible-resource-manager.remember_menu_state'),
             'navigation' => $this->serializeGroups(config('collapsible-resource-manager.navigation')),
         ]);
     }
@@ -54,13 +55,16 @@ class CollapsibleResourceManager extends Tool
     /**
      * @param array $navigation
      *
+     * @param null $parentKey
+     *
      * @return array
      */
-    private function serializeGroups(array $navigation): array
+    private function serializeGroups(array $navigation, $parentKey = null): array
     {
 
-        foreach ($navigation as &$item) {
+        foreach ($navigation as $key => &$item) {
 
+            $item[ 'key' ] = "_{$parentKey}_{$key}_";
             $item[ 'title' ] = isset($item[ 'title' ]) ? $this->translateKey($item[ 'title' ]) : null;
             $item[ 'resources' ] = $this->resolveResources($item[ 'resources' ] ?? []);
             $item[ 'groups' ] = $this->parseGroups($item[ 'groups' ] ?? []);
@@ -90,7 +94,7 @@ class CollapsibleResourceManager extends Tool
 
             if (is_array($resource)) {
 
-                return array_merge($this->serializeGroups([ $resource ])[ 0 ], [ 'recursive' => true ]);
+                return array_merge($this->serializeGroups([ $resource ], $key)[ 0 ], [ 'recursive' => true ]);
 
             }
 
@@ -114,7 +118,7 @@ class CollapsibleResourceManager extends Tool
 
             }
 
-        })->filter();
+        })->filter()->values();
     }
 
     private function parseGroups(array $groups): Collection
@@ -129,4 +133,5 @@ class CollapsibleResourceManager extends Tool
         });
 
     }
+
 }

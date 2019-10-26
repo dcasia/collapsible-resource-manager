@@ -12,6 +12,11 @@ return [
     'translate_title' => false,
 
     /**
+     * If true the state of the collapsible menu will be persisted upon refresh
+     */
+    'remember_menu_state' => false,
+
+    /**
      * Main navigation, each item on this array creates a new entry on the sidebar with an icon
      */
     'navigation' => [

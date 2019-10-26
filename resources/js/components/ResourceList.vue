@@ -4,7 +4,10 @@
 
         <li class="leading-tight pt-4 text-sm" v-for="resource of resources" :class="{ 'ml-8': !recursive }">
 
-            <collapsible-resource-manager v-if="resource.recursive" :data="resource" :recursive="true"/>
+            <collapsible-resource-manager v-if="resource.recursive"
+                                          :data="resource"
+                                          :recursive="true"
+                                          :remember-menu-state="rememberMenuState"/>
 
             <template v-else>
 
@@ -52,7 +55,8 @@
         name: 'ResourceList',
         props: {
             resources: { type: Array, required: true },
-            recursive: { type: Boolean, default: false }
+            recursive: { type: Boolean, default: false },
+            rememberMenuState: { type: Boolean, required: true },
         }
     }
 

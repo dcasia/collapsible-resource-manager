@@ -15,7 +15,11 @@
 
         </h3>
 
-        <ResourceList class="resources-only" v-if="data.resources" :resources="data.resources" :recursive="data.recursive"/>
+        <ResourceList class="resources-only"
+                      v-if="data.resources"
+                      :resources="data.resources"
+                      :recursive="data.recursive"
+                      :remember-menu-state="rememberMenuState"/>
 
         <template v-for="(group, index) of data.groups" v-if="group.resources.length">
 
@@ -45,7 +49,10 @@
 
             <CollapseTransition :duration="150">
 
-                <ResourceList v-if="activeMenu[index]" :resources="group.resources" :recursive="data.recursive"/>
+                <ResourceList v-if="activeMenu[index]"
+                              :resources="group.resources"
+                              :recursive="data.recursive"
+                              :remember-menu-state="rememberMenuState"/>
 
             </CollapseTransition>
 
@@ -64,14 +71,45 @@
         name: 'CollapsibleResourceManager',
         components: { CollapseTransition, ResourceList },
         props: {
-            data: { type: Object, required: true }
+            data: { type: Object, required: true },
+            rememberMenuState: { type: Boolean, default: false }
         },
         data() {
             return {
                 activeMenu: this.data.groups.map(group => !!group.expanded)
             }
         },
+        created() {
+
+            if (this.rememberMenuState) {
+
+                const state = localStorage.getItem(this.cacheKey)
+
+                if (state) {
+
+                    const activeMenu = JSON.parse(state)
+
+                    if (Array.isArray(activeMenu)) {
+
+                        this.activeMenu = activeMenu
+
+                    }
+
+                }
+
+                this.$watch(() => this.activeMenu, (state) => {
+
+                    localStorage.setItem(this.cacheKey, JSON.stringify(state))
+
+                })
+
+            }
+
+        },
         computed: {
+            cacheKey() {
+                return `menu-state.${this.data.key}`
+            },
             isEmpty() {
                 return this.data.resources.length + this.data.groups.filter(group => group.resources.length).length === 0
             }
@@ -94,6 +132,10 @@
 
     .resources-only li:first-child {
         padding-top: 0;
+    }
+
+    .recursive h4:first-child {
+        margin-top: 0;
     }
 
     .recursive h4 {
