@@ -1,25 +1,25 @@
 <template>
 
-    <ul class="list-reset" v-if="resources.length">
+    <ul class="list-reset">
 
         <li class="leading-tight pt-4 text-sm" v-for="resource of resources" :class="{ 'ml-8': !recursive }">
 
-            <collapsible-resource-manager v-if="resource.recursive"
+            <collapsible-resource-manager v-if="resource.type === 'group'"
                                           :data="resource"
-                                          :recursive="true"
-                                          :remember-menu-state="rememberMenuState"/>
+                                          :remember-menu-state="rememberMenuState"
+                                          recursive/>
 
-            <template v-else>
+            <div v-if="resource.type === 'external_link'">
 
-                <a v-if="resource.absolute"
-                   class="relative text-white text-justify no-underline dim"
-                   :href="resource.route"
-                   :target="resource.route.startsWith('http') ? '_blank' : '_self'">
+                <a class="relative text-white text-justify no-underline dim"
+                   :href="resource.url"
+                   :target="resource.target">
 
                     {{ resource.label }}
 
-                    <svg v-if="resource.route.startsWith('http')"
-                         class="absolute icon"
+                    <div v-if="resource.icon" class="absolute resource-list-icon flex" v-html="resource.icon"/>
+
+                    <svg v-else class="absolute resource-list-icon"
                          viewBox="0 0 24 24"
                          width="24"
                          height="24">
@@ -32,16 +32,18 @@
 
                 </a>
 
-                <router-link v-else class="relative text-white text-justify no-underline dim"
-                             :to="{ name: 'index', params: { resourceName: resource.route } }">
+            </div>
 
-                    <div v-if="resource.icon" class="absolute icon flex" v-html="resource.icon"/>
+            <router-link v-else
+                         class="relative text-white text-justify no-underline dim"
+                         :to="resource.router"
+                         :target="resource.target">
 
-                    {{ resource.label }}
+                <div v-if="resource.icon" class="absolute resource-list-icon flex" v-html="resource.icon"/>
 
-                </router-link>
+                {{ resource.label }}
 
-            </template>
+            </router-link>
 
         </li>
 
@@ -56,18 +58,29 @@
         props: {
             resources: { type: Array, required: true },
             recursive: { type: Boolean, default: false },
-            rememberMenuState: { type: Boolean, required: true },
+            rememberMenuState: { type: Boolean, required: true }
         }
     }
 
 </script>
 
-<style scoped>
+<style>
 
-    .icon {
+    .resource-list-icon {
         width: 15px;
         top: -3px;
         left: -25px;
+    }
+
+    .custom-tools * {
+        margin: 0;
+        padding: 0;
+        font-size: inherit;
+        position: inherit;
+    }
+
+    .custom-tools svg, .custom-tools img {
+        display: none;
     }
 
 </style>
