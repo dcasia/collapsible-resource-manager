@@ -33,12 +33,17 @@ class NovaResource extends AbstractResource
     {
         $this->resource = $resource;
         $this->setIconFromResourceIfExists($resource);
+        $this->setLabelFromResource($resource);
+
     }
 
     public function authorizedToSee(Request $request)
     {
+
         if ($this->seeCallback) {
+
             return call_user_func($this->seeCallback, $request);
+
         }
 
         if ($this->view === 'index') {
@@ -135,7 +140,7 @@ class NovaResource extends AbstractResource
         return [
             'type' => 'nova_lens_resource',
             'icon' => $this->getIcon(),
-            'label' => $this->resource::label(),
+            'label' => $this->getLabel(),
             'router' => [
                 'name' => $this->view,
                 'params' => [

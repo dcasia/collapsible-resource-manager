@@ -12,7 +12,7 @@ class RawResource extends AbstractResource
         return [
             'type' => 'raw_resource',
             'icon' => $this->getIcon(),
-            'label' => $this->data->get('title'),
+            'label' => $this->getLabel(),
             'target' => $this->data->get('target', '_blank'),
             'router' => [
                 'name' => $this->data->get('name'),

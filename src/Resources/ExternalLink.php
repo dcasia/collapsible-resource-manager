@@ -12,7 +12,7 @@ class ExternalLink extends AbstractResource
         return [
             'type' => 'external_link',
             'icon' => $this->getIcon(),
-            'label' => $this->data->get('title'),
+            'label' => $this->getLabel(),
             'url' => $this->data->get('url'),
             'target' => $this->data->get('target', '_blank'),
         ];

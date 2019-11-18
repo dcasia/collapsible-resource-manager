@@ -77,7 +77,7 @@ class TopLevelResource extends AbstractResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'label' => $this->data->get('title'),
+            'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
             'resources' => array_filter($resources)
         ];

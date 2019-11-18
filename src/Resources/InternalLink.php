@@ -12,7 +12,7 @@ class InternalLink extends AbstractResource
         return [
             'type' => 'internal_link',
             'icon' => $this->getIcon(),
-            'label' => $this->data->get('title'),
+            'label' => $this->getLabel(),
             'target' => $this->data->get('target', '_blank'),
             'router' => [
                 'path' => $this->data->get('path'),

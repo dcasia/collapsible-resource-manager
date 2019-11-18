@@ -28,7 +28,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             new CollapsibleResourceManager([
                 'navigation' => [
                     TopLevelResource::make([
-                        'title' => 'Resources',
+                        'label' => 'Resources',
                         'resources' => [
                             \App\App\Nova\User::class
                         ]
@@ -61,7 +61,7 @@ On the `navigation` key only `TopLevelResource` are allowed to be used, any othe
 
 ```php
 TopLevelResource::make([
-    'title' => 'Resources',
+    'label' => 'Resources',
     'icon' => null,
     'resources' => [
         NovaResource::make(...)
@@ -99,7 +99,7 @@ Group appears as a toggle with a +/- sign that allows user to collapse multiple 
 
 ```php
 Group::make([
-    'title' => 'Admin',
+    'label' => 'Admin',
     'expanded' => false,
     'resources' => [
         // any resource instance
@@ -113,7 +113,7 @@ Internal Link is an easy way to manually direct user to an specific URL using th
 
 ```php
 InternalLink::make([
-    'title' => 'My custom internal link',
+    'label' => 'My custom internal link',
     'icon' => null
     'target' => '_self',
     'path' => '/my/custom/resource/url',
@@ -141,7 +141,7 @@ External links are useful to add entries on the menu that redirects user to an e
 
 ```php
 ExternalLink::make([
-    'title' => 'Google',
+    'label' => 'Google',
     'icon' => null
     'target' => '_blank',
     'url' => 'https://google.com.br'
@@ -155,7 +155,7 @@ If none of the pre-configured resources suffice your needs, RawResource provides
 
 ```php
 RawResource::make([
-    'title' => 'Customer',
+    'label' => 'Customer',
     'icon' => null
     'target' => '_self',
     'name' => 'index',
@@ -178,6 +178,15 @@ Group::make(...)->canSee(function($request) {
 
 By default `NovaResource` will follow the default policy registered for the given resource, however it can be overridden
 by chaining the `->canSee()` manually
+
+# Resource Labels and Translations
+
+You can pass translated labels to any resource by calling the `->label()` method, eg:
+
+```php
+NovaResource::make(\App\App\Nova\Customer::class)->label(function() { return __('Customer'); }) // or
+NovaResource::make(\App\App\Nova\Customer::class)->label(__('Customer'))
+```
 
 # Resource Icons
 
@@ -203,7 +212,7 @@ class Customer extends Resource
 
 For the `LensResource` the static icon method should be defined on the lens class not on the resource class
 
-And for all the other resources that doesnt accept a class string as configuration the icon can be set by 
+And for all the other resources that doesnt accept a class string as configuration, the icon can be set by 
 passing an icon key or calling `->icon()` to the resource itself, example:
 
 ```php
@@ -213,17 +222,11 @@ ExternalLink::make([
     'icon' => '<svg>...</svg>',
 ])
 
-ExternalLink::make(...)->icon(function() { return '<svg>...</svg>' }) //or
+ExternalLink::make(...)->icon(function() { return '<svg>...</svg>' }) // or
 ExternalLink::make(...)->icon('<svg>...</svg>')
 ```
 
 ![Icons](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/screenshots/menu-icons.png)
-
-# Notes
-
-A key difference between `CollapsibleResourceManager` and the default Nova `ResourceManager` is that the later auto scan
-for resources within the `App\Nova` directory and adds it to the navigation, `CollapsibleResourceManager` expects
-every entry to be added manually from the configuration file.
 
 ## License
 

@@ -28,6 +28,7 @@ class LensResource extends AbstractResource
         $this->resource = $resource;
         $this->lens = $lens;
         $this->setIconFromResourceIfExists($lens);
+        $this->setLabelFromResource($lens);
     }
 
     /**
@@ -43,7 +44,7 @@ class LensResource extends AbstractResource
         return [
             'type' => 'nova_resource',
             'icon' => $this->getIcon(),
-            'label' => $lensInstance->name(),
+            'label' => $this->getLabel(),
             'router' => [
                 'name' => 'lens',
                 'params' => [
