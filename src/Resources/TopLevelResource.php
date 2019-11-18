@@ -1,10 +1,9 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
-use Laravel\Nova\Tool;
 
 class TopLevelResource extends AbstractResource
 {
@@ -80,7 +79,6 @@ class TopLevelResource extends AbstractResource
             'type' => $this->type,
             'label' => $this->data->get('title'),
             'icon' => $this->getIcon(),
-            'expanded' => $this->data->get('expanded', false),
             'resources' => array_filter($resources)
         ];
 

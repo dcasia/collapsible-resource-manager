@@ -2,6 +2,7 @@
 
 namespace DigitalCreative\CollapsibleResourceManager;
 
+use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\View\View;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;

@@ -1,8 +1,8 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
-class InternalLink extends AbstractResource
+class RawResource extends AbstractResource
 {
     /**
      * Specify data which should be serialized to JSON
@@ -10,14 +10,15 @@ class InternalLink extends AbstractResource
     public function jsonSerialize(): array
     {
         return [
-            'type' => 'internal_link',
+            'type' => 'raw_resource',
             'icon' => $this->getIcon(),
             'label' => $this->data->get('title'),
             'target' => $this->data->get('target', '_blank'),
             'router' => [
+                'name' => $this->data->get('name'),
                 'path' => $this->data->get('path'),
-                'query' => $this->data->get('query'),
                 'params' => $this->data->get('params'),
+                'query' => $this->data->get('query'),
             ]
         ];
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
 use Closure;
 use Illuminate\Support\Fluent;

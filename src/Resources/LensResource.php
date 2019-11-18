@@ -1,6 +1,6 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Resource;

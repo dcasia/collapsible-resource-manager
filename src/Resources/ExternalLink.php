@@ -1,6 +1,6 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
 class ExternalLink extends AbstractResource
 {

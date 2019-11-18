@@ -25,72 +25,169 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         return [
             // ...
-            new CollapsibleResourceManager()
+            new CollapsibleResourceManager([
+                'navigation' => [
+                    TopLevelResource::make([
+                        'title' => 'Resources',
+                        'resources' => [
+                            \App\App\Nova\User::class
+                        ]
+                    ]),
+                ]
+            ])
         ];
-
     }
 }
 ```
 
-Publish the configuration file
-
-```bash
-php artisan vendor:publish --provider="DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManagerServiceProvider" --tag="config"
-```
-
-Config file reference: 
+#### Options 
 
 ```php
-return [
-    /**
-     * If false the default resource manager will coexist with this tool
-     */
-    'disable_default_resource_manager' => true,
-
-    /**
-     * If true all titles within navigation array will pass through laravel trans helper
-     */
-    'translate_title' => false,
-
-    /**
-     * If true the state of the collapsible menu will be persisted upon refresh
-     */
-    'remember_menu_state' => false,
-
-    /**
-     * Main navigation, each item on this array creates a new entry on the sidebar with an icon
-     */
+new CollapsibleResourceManager([
+    'disable_default_resource_manager' => true, // default
+    'remember_menu_state' => false // default
     'navigation' => [
-        [
-            'title' => 'Resource Title',
-            'icon' => null, //<svg></svg> or <img src=""/>
-            'resources' => [
-                \App\Nova\Page::class, // if passed without a key it will use the static label() function within the resource class
-                'Custom Label' => \App\Nova\Article::class,
-                'Internal Link' => '/custom/route',
-                'External Link' => 'https://example.com'
-            ],
-            'groups' => [
-                [
-                    'title' => 'Assets',
-                    'expanded' => true,
-                    'resources' => [
-                        \App\Nova\Image::class,
-                        \App\Nova\Video::class,
-                    ]
-                ]
-            ]
-        ]
+        TopLevelResource::make(...),
+        TopLevelResource::make(...)
     ]
-];
+])
 ```
+
+On the `navigation` key only `TopLevelResource` are allowed to be used, any other resource will be ignored.
+
+# Navigation Resources
+
+#### TopLevelResource
+
+```php
+TopLevelResource::make([
+    'title' => 'Resources',
+    'icon' => null,
+    'resources' => [
+        NovaResource::make(...)
+        Group::make(...)
+        LensResource::make(...)
+        InternalLink::make(...)
+        ExternalLink::make(...)
+        RawResource::make(...)
+    ]
+])
+```
+
+#### NovaResource
+
+You can either pass a `\App\App\Nova\Resource::class` or a instance of `NovaResource`
+
+```php
+NovaResource::make(\App\App\Nova\Customer::class)
+```
+
+Additionally you can redirect the user to specific views on click by chaining one of these methods:
+
+```php
+NovaResource::make(\App\App\Nova\Customer::class)->index() // Open the create index for the given resource - default
+NovaResource::make(\App\App\Nova\Customer::class)->create() // Open the create view for the given resource
+NovaResource::make(\App\App\Nova\Customer::class)->detail($resourceId) // Open the detail view for the given ID
+NovaResource::make(\App\App\Nova\Customer::class)->edit($resourceId) // Open the form view of the given ID
+```
+
+Authorization is also respected for each of these views
+
+#### Group
+
+Group appears as a toggle with a +/- sign that allows user to collapse multiple items into a single entry on the sidebar:
+
+```php
+Group::make([
+    'title' => 'Admin',
+    'expanded' => false,
+    'resources' => [
+        // any resource instance
+    ]
+])
+```
+
+#### InternalLink
+
+Internal Link is an easy way to manually direct user to an specific URL using the default navigation mechanism:
+
+```php
+InternalLink::make([
+    'title' => 'My custom internal link',
+    'icon' => null
+    'target' => '_self',
+    'path' => '/my/custom/resource/url',
+    'params' => [ 'resourceId' => 1 ]
+    'query' => [' resource_per_page' => 100 ]
+])
+```
+
+#### LensResource
+
+Lens Resource is a quickly way to add an entry on the sidebar that directs the user directly to an lens view for a given resource,
+
+It requires 2 params: the resource the lens was used and the lens class itself you want to link to:
+
+```php
+LensResource::make(
+    \App\App\Nova\Customer::class,
+    \App\Nova\Lenses\MostValuableCustomers::class
+)
+```
+
+#### ExternalLink
+
+External links are useful to add entries on the menu that redirects user to an external URL:
+
+```php
+ExternalLink::make([
+    'title' => 'Google',
+    'icon' => null
+    'target' => '_blank',
+    'url' => 'https://google.com.br'
+])
+```
+
+#### RawResource
+
+If none of the pre-configured resources suffice your needs, RawResource provides an way to manually define what params the
+<router-link> should be built with:
+
+```php
+RawResource::make([
+    'title' => 'Customer',
+    'icon' => null
+    'target' => '_self',
+    'name' => 'index',
+    'path' => null,
+    'params' => [ 'resourceName' => 'customer' ],
+    'query' => [ 'foo' => 'bar' ],
+])
+```
+
+# Authorization
+
+All the resources uses `AuthorizedToSee` nova trait therefor they behave like tools and cards, 
+where you can chain `canSee` to determine if the current logged in user is allowed to see the resource.
+
+```php
+Group::make(...)->canSee(function($request) {
+    return true/false
+})
+```
+
+By default `NovaResource` will follow the default policy registered for the given resource, however it can be overridden
+by chaining the `->canSee()` manually
 
 # Resource Icons
 
-You can define custom icons by adding a static icon method to your Nova resource:
+You can define icons for `NovaResource` by either:
+
+- Calling `->icon()` method on the `NovaResource` it accepts a `Closure` that returns a `string` or a `string` directly
+- Setting a static method called `icon` that returns an string on the resource class:
 
 ```php
-class Article extends Resource
+class Customer extends Resource
 {
     //...
     public static function icon(): string
@@ -102,6 +199,22 @@ class Article extends Resource
         SVG;
     }
 }
+```
+
+For the `LensResource` the static icon method should be defined on the lens class not on the resource class
+
+And for all the other resources that doesnt accept a class string as configuration the icon can be set by 
+passing an icon key or calling `->icon()` to the resource itself, example:
+
+```php
+ExternalLink::make([
+    ...
+    'icon' => function() { return '<svg>...</svg>' }, // or
+    'icon' => '<svg>...</svg>',
+])
+
+ExternalLink::make(...)->icon(function() { return '<svg>...</svg>' }) //or
+ExternalLink::make(...)->icon('<svg>...</svg>')
 ```
 
 ![Icons](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/screenshots/menu-icons.png)

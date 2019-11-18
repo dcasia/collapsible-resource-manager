@@ -1,6 +1,6 @@
 <?php
 
-namespace DigitalCreative\CollapsibleResourceManager;
+namespace DigitalCreative\CollapsibleResourceManager\Resources;
 
 use App\Nova\Resource;
 use Closure;
@@ -71,6 +71,7 @@ class NovaResource extends AbstractResource
 
     /**
      * @param Closure|int $resourceId
+     *
      * @return $this
      */
     public function detail($resourceId): self
@@ -83,6 +84,7 @@ class NovaResource extends AbstractResource
 
     /**
      * @param Closure|int $resourceId
+     *
      * @return $this
      */
     public function edit($resourceId): self
@@ -97,6 +99,7 @@ class NovaResource extends AbstractResource
      * Alias for edit
      *
      * @param Closure|int $resourceId
+     *
      * @return $this
      */
     public function update($resourceId): self
