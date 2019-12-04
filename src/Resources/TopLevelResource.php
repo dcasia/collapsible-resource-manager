@@ -19,6 +19,11 @@ class TopLevelResource extends AbstractResource
     protected $id;
 
     /**
+     * @var AbstractResource|null
+     */
+    protected $linkTo = null;
+
+    /**
      * @param string $id
      */
     public function setId(string $id): void
@@ -34,12 +39,19 @@ class TopLevelResource extends AbstractResource
         return $this->data->get('resources', []);
     }
 
+    public function linkToResource(AbstractResource $resource): self
+    {
+        $this->linkTo = $resource;
+
+        return $this;
+    }
+
     /**
      * @param $resource
      *
      * @return AbstractResource
      */
-    private function parseResource($resource): AbstractResource
+    private function parseResource($resource): ?AbstractResource
     {
 
         if (is_subclass_of($resource, Resource::class)) {
@@ -50,6 +62,13 @@ class TopLevelResource extends AbstractResource
 
         return $resource;
 
+    }
+
+    private function getLinkTo(): ?AbstractResource
+    {
+        return $this->parseResource(
+            $this->data->get('linkTo', $this->linkTo)
+        );
     }
 
     /**
@@ -72,13 +91,14 @@ class TopLevelResource extends AbstractResource
 
             }
 
-        };
+        }
 
         return [
             'id' => $this->id,
             'type' => $this->type,
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
+            'linkTo' => $this->getLinkTo(),
             'resources' => array_filter($resources)
         ];
 

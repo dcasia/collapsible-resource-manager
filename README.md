@@ -63,12 +63,13 @@ On the `navigation` key only `TopLevelResource` are allowed to be used, any othe
 TopLevelResource::make([
     'label' => 'Resources',
     'icon' => null,
+    'linkTo' => null, // accepts an instance of `NovaResource` or a Nova `Resource::class`
     'resources' => [
-        NovaResource::make(...)
-        Group::make(...)
-        LensResource::make(...)
-        InternalLink::make(...)
-        ExternalLink::make(...)
+        NovaResource::make(...),
+        Group::make(...),
+        LensResource::make(...),
+        InternalLink::make(...),
+        ExternalLink::make(...),
         RawResource::make(...)
     ]
 ])

@@ -2,8 +2,8 @@
 
     <div v-if="!isEmpty" :class="[ data.type, { 'mb-8': isTopLevel } ]">
 
-        <h3 class="flex items-center font-normal text-white mb-6 text-base no-underline"
-            v-if="data.label && isTopLevel">
+        <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
+                   class="flex items-center font-normal text-white mb-6 text-base no-underline">
 
             <div v-if="data.icon" class="sidebar-icon" v-html="data.icon"/>
 
@@ -12,9 +12,9 @@
                       d="M3 1h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3h-4zM3 11h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4h-4z"/>
             </svg>
 
-            <span class="sidebar-label">{{ data.label }}</span>
+            <span class="text-white sidebar-label">{{ data.label }}</span>
 
-        </h3>
+        </component>
 
         <ResourceList class="resources-only"
                       v-if="isTopLevel && data.resources.length"
@@ -78,7 +78,7 @@
         },
         data() {
             return {
-                activeMenu: { [this.data.id]: this.data.expanded }
+                activeMenu: { [ this.data.id ]: this.data.expanded }
             }
         },
         created() {
@@ -89,11 +89,11 @@
 
                 if (state) {
 
-                    this.activeMenu[this.data.id] = JSON.parse(state)
+                    this.activeMenu[ this.data.id ] = JSON.parse(state)
 
                 }
 
-                this.$watch(() => this.activeMenu[this.data.id], state => {
+                this.$watch(() => this.activeMenu[ this.data.id ], state => {
 
                     localStorage.setItem(this.cacheKey, state)
 
@@ -110,15 +110,33 @@
                 return this.data.type === 'top_level'
             },
             cacheKey() {
-                return `menu-state.${this.data.id}`
+                return `menu-state.${ this.data.id }`
             },
             isEmpty() {
                 return this.data.resources.length === 0
+            },
+            topLevelLink() {
+
+                if (this.data.linkTo) {
+
+                    return {
+                        is: 'router-link',
+                        to: this.data.linkTo.router,
+                        target: this.data.linkTo.target,
+                        class: [ 'cursor-pointer', 'dim' ]
+                    }
+
+                }
+
+                return {
+                    is: 'h3'
+                }
+
             }
         },
         methods: {
             toggleGroup(id) {
-                this.activeMenu[id] = !this.activeMenu[id]
+                this.activeMenu[ id ] = !this.activeMenu[ id ]
             }
         }
     }
