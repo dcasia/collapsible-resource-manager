@@ -4,6 +4,7 @@ namespace DigitalCreative\CollapsibleResourceManager;
 
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\View\View;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
 use Laravel\Nova\Tools\ResourceManager;
@@ -68,26 +69,34 @@ class CollapsibleResourceManager extends Tool
     {
         return view('collapsible-resource-manager::navigation', [
             'rememberMenuState' => $this->config[ 'remember_menu_state' ],
-            'navigation' => $this->setResourcesIds($this->config[ 'navigation' ])
+            'navigation' => $this->parseNavigationResources($this->config[ 'navigation' ])
         ]);
     }
 
-    private function setResourcesIds(array $resources, $root = null)
+    private function parseNavigationResources(array $resources, $root = null): array
     {
 
         foreach ($resources as $index => $resource) {
 
             if ($resource instanceof TopLevelResource) {
 
-                $resource->setId($root . $index);
+                if ($resource->authorizedToSee(resolve(NovaRequest::class))) {
 
-                $this->setResourcesIds($resource->resources(), $index . '_');
+                    $resource->setId($root . $index);
+
+                    $this->parseNavigationResources($resource->resources(), $index . '_');
+
+                } else {
+
+                    unset($resources[ $index ]);
+
+                }
 
             }
 
         }
 
-        return $resources;
+        return array_values($resources);
 
     }
 
