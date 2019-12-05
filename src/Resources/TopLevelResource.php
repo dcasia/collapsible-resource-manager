@@ -71,6 +71,27 @@ class TopLevelResource extends AbstractResource
         );
     }
 
+    protected function getLabel(): ?string
+    {
+
+        /**
+         * Use set label if present
+         */
+        $label = parent::getLabel();
+
+        /**
+         * Otherwise try to find the label of the linkTo action
+         */
+        if (is_null($label) && ($linkTo = $this->getLinkTo())) {
+
+            return $linkTo->getLabel();
+
+        }
+
+        return $label;
+
+    }
+
     /**
      * Specify data which should be serialized to JSON
      */

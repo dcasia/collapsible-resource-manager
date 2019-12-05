@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="!isEmpty" :class="[ data.type, { 'mb-8': isTopLevel } ]">
+    <div v-if="!isEmpty || data.linkTo" :class="[ data.type, { 'mb-8': isTopLevel } ]">
 
         <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
                    class="flex items-center font-normal text-white mb-6 text-base no-underline">
