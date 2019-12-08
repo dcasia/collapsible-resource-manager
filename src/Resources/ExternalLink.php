@@ -11,6 +11,7 @@ class ExternalLink extends AbstractResource
     {
         return [
             'type' => 'external_link',
+            'badge' => $this->getBadge(),
             'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'url' => $this->data->get('url'),

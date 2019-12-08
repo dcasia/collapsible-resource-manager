@@ -12,7 +12,11 @@
                       d="M3 1h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3h-4zM3 11h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4h-4z"/>
             </svg>
 
-            <span class="text-white sidebar-label">{{ data.label }}</span>
+            <Badge :label="data.badge">
+                <span class="text-white sidebar-label">
+                    {{ data.label }}
+                </span>
+            </Badge>
 
         </component>
 
@@ -44,7 +48,9 @@
 
                 </div>
 
-                {{ data.label }}
+                <Badge :label="data.badge">
+                    {{ data.label }}
+                </Badge>
 
             </h4>
 
@@ -67,10 +73,11 @@
 
     import { CollapseTransition } from 'vue2-transitions'
     import ResourceList from './ResourceList'
+    import Badge from './Badge'
 
     export default {
         name: 'CollapsibleResourceManager',
-        components: { CollapseTransition, ResourceList },
+        components: { CollapseTransition, ResourceList, Badge },
         props: {
             data: { type: Object, required: true },
             rememberMenuState: { type: Boolean, default: false },

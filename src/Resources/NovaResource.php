@@ -138,7 +138,8 @@ class NovaResource extends AbstractResource
     public function jsonSerialize(): array
     {
         return [
-            'type' => 'nova_lens_resource',
+            'type' => 'nova_resource',
+            'badge' => $this->getBadge(),
             'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'router' => [

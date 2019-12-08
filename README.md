@@ -45,12 +45,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 ```php
 new CollapsibleResourceManager([
     'disable_default_resource_manager' => true, // default
-    'remember_menu_state' => false // default
+    'remember_menu_state' => false, // default
     'navigation' => [
         TopLevelResource::make(...),
         TopLevelResource::make(...)
     ]
-])
+]);
 ```
 
 On the `navigation` key only `TopLevelResource` are allowed to be used, any other resource will be ignored.
@@ -62,6 +62,7 @@ On the `navigation` key only `TopLevelResource` are allowed to be used, any othe
 ```php
 TopLevelResource::make([
     'label' => 'Resources',
+    'badge' => null,
     'icon' => null,
     'linkTo' => null, // accepts an instance of `NovaResource` or a Nova `Resource::class`
     'resources' => [
@@ -72,7 +73,7 @@ TopLevelResource::make([
         ExternalLink::make(...),
         RawResource::make(...)
     ]
-])
+]);
 ```
 
 #### NovaResource
@@ -80,16 +81,16 @@ TopLevelResource::make([
 You can either pass a `\App\App\Nova\Resource::class` or a instance of `NovaResource`
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class)
+NovaResource::make(\App\App\Nova\Customer::class);
 ```
 
 Additionally you can redirect the user to specific views on click by chaining one of these methods:
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class)->index() // Open the create index for the given resource - default
-NovaResource::make(\App\App\Nova\Customer::class)->create() // Open the create view for the given resource
-NovaResource::make(\App\App\Nova\Customer::class)->detail($resourceId) // Open the detail view for the given ID
-NovaResource::make(\App\App\Nova\Customer::class)->edit($resourceId) // Open the form view of the given ID
+NovaResource::make(\App\App\Nova\Customer::class)->index(); // Open the create index for the given resource - default
+NovaResource::make(\App\App\Nova\Customer::class)->create(); // Open the create view for the given resource
+NovaResource::make(\App\App\Nova\Customer::class)->detail($resourceId); // Open the detail view for the given ID
+NovaResource::make(\App\App\Nova\Customer::class)->edit($resourceId); // Open the form view of the given ID
 ```
 
 Authorization is also respected for each of these views
@@ -105,7 +106,7 @@ Group::make([
     'resources' => [
         // any resource instance
     ]
-])
+]);
 ```
 
 #### InternalLink
@@ -115,12 +116,13 @@ Internal Link is an easy way to manually direct user to an specific URL using th
 ```php
 InternalLink::make([
     'label' => 'My custom internal link',
-    'icon' => null
+    'badge' => null,
+    'icon' => null,
     'target' => '_self',
     'path' => '/my/custom/resource/url',
-    'params' => [ 'resourceId' => 1 ]
+    'params' => [ 'resourceId' => 1 ],
     'query' => [' resource_per_page' => 100 ]
-])
+]);
 ```
 
 #### LensResource
@@ -133,7 +135,7 @@ It requires 2 params: the resource the lens was used and the lens class itself y
 LensResource::make(
     \App\App\Nova\Customer::class,
     \App\Nova\Lenses\MostValuableCustomers::class
-)
+);
 ```
 
 #### ExternalLink
@@ -143,10 +145,11 @@ External links are useful to add entries on the menu that redirects user to an e
 ```php
 ExternalLink::make([
     'label' => 'Google',
-    'icon' => null
+    'badge' => null,
+    'icon' => null,
     'target' => '_blank',
     'url' => 'https://google.com.br'
-])
+]);
 ```
 
 #### RawResource
@@ -157,13 +160,14 @@ If none of the pre-configured resources suffice your needs, RawResource provides
 ```php
 RawResource::make([
     'label' => 'Customer',
-    'icon' => null
+    'badge' => null,
+    'icon' => null,
     'target' => '_self',
     'name' => 'index',
     'path' => null,
     'params' => [ 'resourceName' => 'customer' ],
     'query' => [ 'foo' => 'bar' ],
-])
+]);
 ```
 
 # Authorization
@@ -173,8 +177,8 @@ where you can chain `canSee` to determine if the current logged in user is allow
 
 ```php
 Group::make(...)->canSee(function($request) {
-    return true/false
-})
+    return true/false;
+});
 ```
 
 By default `NovaResource` will follow the default policy registered for the given resource, however it can be overridden
@@ -185,8 +189,8 @@ by chaining the `->canSee()` manually
 You can pass translated labels to any resource by calling the `->label()` method, eg:
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class)->label(function() { return __('Customer'); }) // or
-NovaResource::make(\App\App\Nova\Customer::class)->label(__('Customer'))
+NovaResource::make(\App\App\Nova\Customer::class)->label(function() { return __('Customer'); }); // or
+NovaResource::make(\App\App\Nova\Customer::class)->label(__('Customer'));
 ```
 
 # Resource Icons
@@ -221,10 +225,10 @@ ExternalLink::make([
     ...
     'icon' => function() { return '<svg>...</svg>' }, // or
     'icon' => '<svg>...</svg>',
-])
+]);
 
-ExternalLink::make(...)->icon(function() { return '<svg>...</svg>' }) // or
-ExternalLink::make(...)->icon('<svg>...</svg>')
+ExternalLink::make(...)->icon(function() { return '<svg>...</svg>' }); // or
+ExternalLink::make(...)->icon('<svg>...</svg>');
 ```
 
 ![Icons](https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/master/screenshots/menu-icons.png)

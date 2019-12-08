@@ -11,6 +11,7 @@ class InternalLink extends AbstractResource
     {
         return [
             'type' => 'internal_link',
+            'badge' => $this->getBadge(),
             'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'target' => $this->data->get('target', '_blank'),

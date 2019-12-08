@@ -42,7 +42,8 @@ class LensResource extends AbstractResource
         $lensInstance = new $this->lens;
 
         return [
-            'type' => 'nova_resource',
+            'type' => 'nova_lens_resource',
+            'badge' => $this->getBadge(),
             'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'router' => [

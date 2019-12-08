@@ -15,7 +15,9 @@
                    :href="resource.url"
                    :target="resource.target">
 
-                    {{ resource.label }}
+                    <Badge :label="resource.badge">
+                        {{ resource.label }}
+                    </Badge>
 
                     <div v-if="resource.icon" class="absolute resource-list-icon flex" v-html="resource.icon"/>
 
@@ -41,7 +43,9 @@
 
                 <div v-if="resource.icon" class="absolute resource-list-icon flex" v-html="resource.icon"/>
 
-                {{ resource.label }}
+                <Badge :label="resource.badge">
+                    {{ resource.label }}
+                </Badge>
 
             </RouterLink>
 
@@ -53,8 +57,11 @@
 
 <script>
 
+    import Badge from './Badge'
+
     export default {
         name: 'ResourceList',
+        components: { Badge },
         props: {
             resources: { type: Array, required: true },
             recursive: { type: Boolean, default: false },

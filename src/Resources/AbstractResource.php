@@ -30,6 +30,11 @@ abstract class AbstractResource implements JsonSerializable
     protected $label;
 
     /**
+     * @var Closure|string|int $badge
+     */
+    protected $badge;
+
+    /**
      * AbstractResource constructor.
      *
      * @param array $data
@@ -48,6 +53,17 @@ abstract class AbstractResource implements JsonSerializable
     public static function make(...$arguments)
     {
         return new static(...$arguments);
+    }
+
+    /**
+     * @param string|int|Closure $badge
+     * @return AbstractResource
+     */
+    public function badge($badge): self
+    {
+        $this->badge = $badge;
+
+        return $this;
     }
 
     /**
@@ -100,6 +116,11 @@ abstract class AbstractResource implements JsonSerializable
         $this->icon(
             method_exists($resource, 'icon') ? $resource::icon() : null
         );
+    }
+
+    protected function getBadge(): ?string
+    {
+        return $this->getAttribute('badge');
     }
 
     protected function getLabel(): ?string

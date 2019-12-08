@@ -10,6 +10,7 @@ class Group extends TopLevelResource
     {
         return array_merge(parent::jsonSerialize(), [
             'expanded' => $this->data->get('expanded', false),
+            'badge' => null
         ]);
     }
 }

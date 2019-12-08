@@ -117,6 +117,7 @@ class TopLevelResource extends AbstractResource
         return [
             'id' => $this->id,
             'type' => $this->type,
+            'badge' => $this->getBadge(),
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
             'linkTo' => $this->getLinkTo(),

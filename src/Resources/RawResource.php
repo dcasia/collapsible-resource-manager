@@ -11,6 +11,7 @@ class RawResource extends AbstractResource
     {
         return [
             'type' => 'raw_resource',
+            'badge' => $this->getBadge(),
             'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'target' => $this->data->get('target', '_blank'),
