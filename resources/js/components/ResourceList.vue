@@ -9,7 +9,7 @@
                                           :remember-menu-state="rememberMenuState"
                                           recursive/>
 
-            <div v-if="resource.type === 'external_link'">
+            <div v-else-if="resource.type === 'external_link'">
 
                 <a class="relative text-white text-justify no-underline dim"
                    :href="resource.url"
@@ -34,16 +34,16 @@
 
             </div>
 
-            <router-link v-else
-                         class="relative text-white text-justify no-underline dim"
-                         :to="resource.router"
-                         :target="resource.target">
+            <RouterLink v-else
+                        class="relative text-white text-justify no-underline dim"
+                        :to="resource.router"
+                        :target="resource.target">
 
                 <div v-if="resource.icon" class="absolute resource-list-icon flex" v-html="resource.icon"/>
 
                 {{ resource.label }}
 
-            </router-link>
+            </RouterLink>
 
         </li>
 
