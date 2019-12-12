@@ -11,7 +11,7 @@
 
             <div v-else-if="resource.type === 'external_link'">
 
-                <a class="relative text-white text-justify no-underline dim"
+                <a class="relative text-white text-left no-underline dim"
                    :href="resource.url"
                    :target="resource.target">
 
@@ -36,8 +36,8 @@
 
             </div>
 
-            <RouterLink v-else
-                        class="relative text-white text-justify no-underline dim"
+            <router-link v-else
+                        class="relative text-white text-left no-underline dim"
                         :to="resource.router"
                         :target="resource.target">
 
@@ -47,7 +47,7 @@
                     {{ resource.label }}
                 </Badge>
 
-            </RouterLink>
+            </router-link>
 
         </li>
 
