@@ -11,7 +11,7 @@
 
             <div v-else-if="resource.type === 'external_link'">
 
-                <a class="relative text-white text-left no-underline dim"
+                <a class="relative text-white text-left no-underline dim block"
                    :href="resource.url"
                    :target="resource.target">
 
@@ -37,7 +37,7 @@
             </div>
 
             <router-link v-else
-                        class="relative text-white text-left no-underline dim"
+                        class="relative text-white text-left no-underline dim block"
                         :to="resource.router"
                         :target="resource.target">
 
