@@ -114,13 +114,15 @@ class TopLevelResource extends AbstractResource
 
         }
 
+        $linkToResource = $this->getLinkTo();
+
         return [
             'id' => $this->id,
             'type' => $this->type,
             'badge' => $this->getBadge(),
             'label' => $this->getLabel(),
-            'icon' => $this->getIcon(),
-            'linkTo' => $this->getLinkTo(),
+            'icon' => $this->getIcon() ?: ($linkToResource ? $linkToResource->getIcon() : null),
+            'linkTo' => $linkToResource,
             'resources' => array_filter($resources)
         ];
 
