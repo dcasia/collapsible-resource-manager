@@ -30,9 +30,9 @@
 
             <h4 class="relative select-none ml-8 mt-4 text-xs text-white-50% uppercase tracking-wide cursor-pointer"
                 v-if="data.label"
-                @click="toggleGroup(data.id)">
+                >
 
-                <div class="absolute flex flex-auto collapsible-indicator">
+                <div class="absolute flex flex-auto collapsible-indicator" @click="toggleGroup(data.id)">
 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
 
@@ -48,7 +48,7 @@
 
                 </div>
 
-                <Badge :label="data.badge">
+                <Badge :label="data.badge"  v-bind="topLevelLink">
                     {{ data.label }}
                 </Badge>
 
@@ -130,7 +130,7 @@
                         is: 'router-link',
                         to: this.data.linkTo.router,
                         target: this.data.linkTo.target,
-                        class: [ 'cursor-pointer', 'dim' ]
+                        class: [ 'cursor-pointer', 'dim', 'text-white','no-underline' ]
                     }
 
                 }
