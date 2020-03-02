@@ -30,7 +30,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     TopLevelResource::make([
                         'label' => 'Resources',
                         'resources' => [
-                            \App\App\Nova\User::class
+                            \App\Nova\User::class
                         ]
                     ]),
                 ]
