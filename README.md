@@ -30,7 +30,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     TopLevelResource::make([
                         'label' => 'Resources',
                         'resources' => [
-                            \App\App\Nova\User::class
+                            \App\Nova\User::class
                         ]
                     ]),
                 ]
@@ -78,19 +78,19 @@ TopLevelResource::make([
 
 #### NovaResource
 
-You can either pass a `\App\App\Nova\Resource::class` or a instance of `NovaResource`
+You can either pass a `\App\Nova\Resource::class` or a instance of `NovaResource`
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class);
+NovaResource::make(\App\Nova\Customer::class);
 ```
 
 Additionally you can redirect the user to specific views on click by chaining one of these methods:
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class)->index(); // Open the create index for the given resource - default
-NovaResource::make(\App\App\Nova\Customer::class)->create(); // Open the create view for the given resource
-NovaResource::make(\App\App\Nova\Customer::class)->detail($resourceId); // Open the detail view for the given ID
-NovaResource::make(\App\App\Nova\Customer::class)->edit($resourceId); // Open the form view of the given ID
+NovaResource::make(\App\Nova\Customer::class)->index(); // Open the create index for the given resource - default
+NovaResource::make(\App\Nova\Customer::class)->create(); // Open the create view for the given resource
+NovaResource::make(\App\Nova\Customer::class)->detail($resourceId); // Open the detail view for the given ID
+NovaResource::make(\App\Nova\Customer::class)->edit($resourceId); // Open the form view of the given ID
 ```
 
 Authorization is also respected for each of these views
@@ -133,7 +133,7 @@ It requires 2 params: the resource the lens was used and the lens class itself y
 
 ```php
 LensResource::make(
-    \App\App\Nova\Customer::class,
+    \App\Nova\Customer::class,
     \App\Nova\Lenses\MostValuableCustomers::class
 );
 ```
@@ -189,8 +189,8 @@ by chaining the `->canSee()` manually
 You can pass translated labels to any resource by calling the `->label()` method, eg:
 
 ```php
-NovaResource::make(\App\App\Nova\Customer::class)->label(function() { return __('Customer'); }); // or
-NovaResource::make(\App\App\Nova\Customer::class)->label(__('Customer'));
+NovaResource::make(\App\Nova\Customer::class)->label(function() { return __('Customer'); }); // or
+NovaResource::make(\App\Nova\Customer::class)->label(__('Customer'));
 ```
 
 # Resource Icons
