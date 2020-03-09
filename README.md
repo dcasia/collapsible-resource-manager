@@ -102,6 +102,7 @@ Group appears as a toggle with a +/- sign that allows user to collapse multiple 
 ```php
 Group::make([
     'label' => 'Admin',
+    'icon' => null,
     'expanded' => false,
     'resources' => [
         // any resource instance

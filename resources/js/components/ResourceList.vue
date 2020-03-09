@@ -75,7 +75,7 @@
 
     .resource-list-icon {
         width: 15px;
-        top: -3px;
+        top: 2px;
         left: -25px;
     }
 
