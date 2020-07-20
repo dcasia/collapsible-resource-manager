@@ -54,6 +54,8 @@ class TopLevelResource extends AbstractResource
     private function parseResource($resource): ?AbstractResource
     {
 
+        $resource = value($resource);
+
         if (is_subclass_of($resource, Resource::class)) {
 
             return new NovaResource($resource);
@@ -66,9 +68,11 @@ class TopLevelResource extends AbstractResource
 
     private function getLinkTo(): ?AbstractResource
     {
-        return $this->parseResource(
-            $this->data->get('linkTo', $this->linkTo)
-        );
+        return once(function () {
+            return $this->parseResource(
+                $this->data->get('linkTo', $this->linkTo)
+            );
+        });
     }
 
     protected function getLabel(): ?string

@@ -144,7 +144,7 @@ abstract class AbstractResource implements JsonSerializable
 
         if ($this->data && ($found = $this->data->get($key))) {
 
-            return $found;
+            return value($found);
 
         }
 
