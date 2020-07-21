@@ -22,6 +22,11 @@ class TopLevelResource extends AbstractResource
      * @var AbstractResource|null
      */
     protected $linkTo = null;
+    
+    /**
+     * @var bool
+     */
+    protected $expanded = true;
 
     /**
      * @param string $id
@@ -125,6 +130,7 @@ class TopLevelResource extends AbstractResource
             'type' => $this->type,
             'badge' => $this->getBadge(),
             'label' => $this->getLabel(),
+            'expanded' => $this->data->get("expanded", null),
             'icon' => $this->getIcon() ?: ($linkToResource ? $linkToResource->getIcon() : null),
             'linkTo' => $linkToResource,
             'resources' => array_filter($resources)

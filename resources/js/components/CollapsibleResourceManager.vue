@@ -3,7 +3,8 @@
     <div v-if="!isEmpty || data.linkTo" :class="[ data.type, { 'mb-8': isTopLevel } ]">
 
         <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
-                   class="flex items-center font-normal text-white mb-6 text-base no-underline">
+                   @click="topExpanded = !topExpanded"
+                   class="flex items-center font-normal text-white mb-6 text-base no-underline relative">
 
             <div v-if="data.icon" class="sidebar-icon" v-html="data.icon"/>
 
@@ -18,10 +19,25 @@
                 </span>
             </Badge>
 
+            <div class="absolute flex flex-auto collapsible-indicator" v-if="isTopCollapsible">
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+
+                    <path v-if="topExpanded"
+                          fill="currentColor"
+                          d="M16 12c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1z"/>
+
+                    <path v-else
+                          fill="currentColor"
+                          d="M13 11h2c.55 0 1 .45 1 1s-.45 1-1 1h-2v2c0 .55-.45 1-1 1s-1-.45-1-1v-2H9c-.55 0-1-.45-1-1s.45-1 1-1h2V9c0-.55.45-1 1-1s1 .45 1 1v2z"/>
+
+                </svg>
+            </div>
+
         </component>
 
         <ResourceList class="resources-only"
-                      v-if="isTopLevel && data.resources.length"
+                      v-if="isTopLevel && data.resources.length && topExpanded"
                       :resources="data.resources"
                       :recursive="recursive"
                       :remember-menu-state="rememberMenuState"/>
@@ -64,7 +80,6 @@
             </CollapseTransition>
 
         </template>
-
     </div>
 
 </template>
@@ -85,6 +100,8 @@
         },
         data() {
             return {
+                topExpanded: this.data.expanded || this.data.expanded == null ? true : false,
+                isTopCollapsible: this.data.expanded === null ? false : true,
                 activeMenu: { [ this.data.id ]: this.data.expanded }
             }
         },
@@ -150,7 +167,7 @@
 
 </script>
 
-<style>
+<style scoped>
 
     .collapsible-indicator {
         top: -6px;
@@ -173,5 +190,9 @@
         margin-top: 0;
     }
 
-
+    h3>.collapsible-indicator {
+        right: -5px;
+        top: -3px;
+        left: auto;
+    }
 </style>
