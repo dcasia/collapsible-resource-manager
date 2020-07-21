@@ -4,6 +4,7 @@
 
         <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
                    @click="topExpanded = !topExpanded"
+                   :class="{'cursor-pointer': isTopCollapsible}"
                    class="flex items-center font-normal text-white mb-6 text-base no-underline relative">
 
             <div v-if="data.icon" class="sidebar-icon" v-html="data.icon"/>
@@ -19,20 +20,7 @@
                 </span>
             </Badge>
 
-            <div class="absolute flex flex-auto collapsible-indicator" v-if="isTopCollapsible">
-
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-
-                    <path v-if="topExpanded"
-                          fill="currentColor"
-                          d="M16 12c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1z"/>
-
-                    <path v-else
-                          fill="currentColor"
-                          d="M13 11h2c.55 0 1 .45 1 1s-.45 1-1 1h-2v2c0 .55-.45 1-1 1s-1-.45-1-1v-2H9c-.55 0-1-.45-1-1s.45-1 1-1h2V9c0-.55.45-1 1-1s1 .45 1 1v2z"/>
-
-                </svg>
-            </div>
+            <collabsabe-indicator :expandend="topExpanded" :visible="isTopCollapsible" style="" />
 
         </component>
 
@@ -48,21 +36,7 @@
                 v-if="data.label"
                 @click="toggleGroup(data.id)">
 
-                <div class="absolute flex flex-auto collapsible-indicator">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-
-                        <path v-if="activeMenu[data.id]"
-                              fill="currentColor"
-                              d="M16 12c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1z"/>
-
-                        <path v-else
-                              fill="currentColor"
-                              d="M13 11h2c.55 0 1 .45 1 1s-.45 1-1 1h-2v2c0 .55-.45 1-1 1s-1-.45-1-1v-2H9c-.55 0-1-.45-1-1s.45-1 1-1h2V9c0-.55.45-1 1-1s1 .45 1 1v2z"/>
-
-                    </svg>
-
-                </div>
+                <collabsabe-indicator :expandend="activeMenu[data.id]" :visible="isTopCollapsible" style="" />
 
                 <Badge :label="data.badge">
                     {{ data.label }}
@@ -89,10 +63,11 @@
     import { CollapseTransition } from 'vue2-transitions'
     import ResourceList from './ResourceList'
     import Badge from './Badge'
+    import CollabsabeIndicator from "./CollabsabeIndicator";
 
     export default {
         name: 'CollapsibleResourceManager',
-        components: { CollapseTransition, ResourceList, Badge },
+        components: {CollabsabeIndicator, CollapseTransition, ResourceList, Badge },
         props: {
             data: { type: Object, required: true },
             rememberMenuState: { type: Boolean, default: false },
