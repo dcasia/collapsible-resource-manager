@@ -48,6 +48,7 @@ abstract class AbstractResource implements JsonSerializable
      * Create a new element.
      *
      * @param array $arguments
+     *
      * @return static
      */
     public static function make(...$arguments)
@@ -57,6 +58,7 @@ abstract class AbstractResource implements JsonSerializable
 
     /**
      * @param string|int|Closure $badge
+     *
      * @return AbstractResource
      */
     public function badge($badge): self
@@ -68,6 +70,7 @@ abstract class AbstractResource implements JsonSerializable
 
     /**
      * @param string $label
+     *
      * @return AbstractResource
      */
     public function label(string $label): self
@@ -79,6 +82,7 @@ abstract class AbstractResource implements JsonSerializable
 
     /**
      * @param Closure|string $icon
+     *
      * @return AbstractResource
      */
     public function icon($icon): self

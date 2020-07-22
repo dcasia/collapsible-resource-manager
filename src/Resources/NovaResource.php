@@ -146,9 +146,9 @@ class NovaResource extends AbstractResource
                 'name' => $this->view,
                 'params' => [
                     'resourceName' => $this->resource::uriKey(),
-                    'resourceId' => is_callable($this->resourceId) ? call_user_func($this->resourceId) : $this->resourceId
-                ]
-            ]
+                    'resourceId' => is_callable($this->resourceId) ? call_user_func($this->resourceId) : $this->resourceId,
+                ],
+            ],
         ];
     }
 }

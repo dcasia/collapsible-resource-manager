@@ -20,7 +20,7 @@ class RawResource extends AbstractResource
                 'path' => $this->data->get('path'),
                 'params' => $this->data->get('params'),
                 'query' => $this->data->get('query'),
-            ]
+            ],
         ];
     }
 }

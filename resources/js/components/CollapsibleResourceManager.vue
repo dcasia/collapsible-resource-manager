@@ -1,11 +1,11 @@
 <template>
 
-    <div v-if="!isEmpty || data.linkTo" :class="[ data.type, { 'mb-8': isTopLevel } ]">
+    <div v-if="!isEmpty || data.linkTo" :class="[ data.type, { 'mb-8': isTopLevel }, 'select-none' ]">
 
         <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
-                   @click="topExpanded = !topExpanded"
-                   :class="{'cursor-pointer': isTopCollapsible}"
-                   class="flex items-center font-normal text-white mb-6 text-base no-underline relative">
+                   @click="toggleTopLevel"
+                   :class="{ 'cursor-pointer': isTopCollapsible }"
+                   class="flex flex-1 items-center font-normal text-white mb-2 text-base no-underline relative">
 
             <div v-if="data.icon" class="sidebar-icon" v-html="data.icon"/>
 
@@ -14,21 +14,27 @@
                       d="M3 1h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2V3c0-1.1045695.8954305-2 2-2zm0 2v4h4V3h-4zM3 11h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2H3c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4H3zm10-2h4c1.1045695 0 2 .8954305 2 2v4c0 1.1045695-.8954305 2-2 2h-4c-1.1045695 0-2-.8954305-2-2v-4c0-1.1045695.8954305-2 2-2zm0 2v4h4v-4h-4z"/>
             </svg>
 
-            <Badge :label="data.badge">
+            <Badge :label="data.badge" :dim="isTopCollapsible" class="flex-1">
+
                 <span class="text-white sidebar-label">
                     {{ data.label }}
                 </span>
-            </Badge>
 
-            <collabsabe-indicator :expandend="topExpanded" :visible="isTopCollapsible" style="" />
+                <CollapsibleIndicator :expanded="topExpanded" :visible="isTopCollapsible"/>
+
+            </Badge>
 
         </component>
 
-        <ResourceList class="resources-only"
-                      v-if="isTopLevel && data.resources.length && topExpanded"
-                      :resources="data.resources"
-                      :recursive="recursive"
-                      :remember-menu-state="rememberMenuState"/>
+        <CollapseTransition :duration="150">
+
+            <ResourceList class="resources-only"
+                          v-if="isTopLevel && data.resources.length && (!isTopCollapsible || topExpanded)"
+                          :resources="data.resources"
+                          :recursive="recursive"
+                          :remember-menu-state="rememberMenuState"/>
+
+        </CollapseTransition>
 
         <template v-if="isGroup && data.resources.length">
 
@@ -36,7 +42,7 @@
                 v-if="data.label"
                 @click="toggleGroup(data.id)">
 
-                <collabsabe-indicator :expandend="activeMenu[data.id]" :visible="isTopCollapsible" style="" />
+                <CollapsibleIndicator :expanded="activeMenu[data.id]" :visible="isTopCollapsible"/>
 
                 <Badge :label="data.badge">
                     {{ data.label }}
@@ -54,6 +60,7 @@
             </CollapseTransition>
 
         </template>
+
     </div>
 
 </template>
@@ -63,11 +70,11 @@
     import { CollapseTransition } from 'vue2-transitions'
     import ResourceList from './ResourceList'
     import Badge from './Badge'
-    import CollabsabeIndicator from "./CollabsabeIndicator";
+    import CollapsibleIndicator from './CollapsibleIndicator'
 
     export default {
         name: 'CollapsibleResourceManager',
-        components: {CollabsabeIndicator, CollapseTransition, ResourceList, Badge },
+        components: { CollapsibleIndicator, CollapseTransition, ResourceList, Badge },
         props: {
             data: { type: Object, required: true },
             rememberMenuState: { type: Boolean, default: false },
@@ -75,8 +82,7 @@
         },
         data() {
             return {
-                topExpanded: this.data.expanded || this.data.expanded == null ? true : false,
-                isTopCollapsible: this.data.expanded === null ? false : true,
+                topExpanded: this.data.expanded,
                 activeMenu: { [ this.data.id ]: this.data.expanded }
             }
         },
@@ -102,6 +108,9 @@
 
         },
         computed: {
+            isTopCollapsible() {
+                return this.data.expanded === null ? false : true && this.data.linkTo === null
+            },
             isGroup() {
                 return this.data.type === 'group'
             },
@@ -134,6 +143,11 @@
             }
         },
         methods: {
+            toggleTopLevel() {
+                if (this.isTopCollapsible) {
+                    this.topExpanded = !this.topExpanded
+                }
+            },
             toggleGroup(id) {
                 this.activeMenu[ id ] = !this.activeMenu[ id ]
             }
@@ -143,11 +157,6 @@
 </script>
 
 <style scoped>
-
-    .collapsible-indicator {
-        top: -6px;
-        left: -30px;
-    }
 
     .top_level ul li:first-child {
         padding-top: 0;
@@ -165,9 +174,4 @@
         margin-top: 0;
     }
 
-    h3>.collapsible-indicator {
-        right: -5px;
-        top: -3px;
-        left: auto;
-    }
 </style>

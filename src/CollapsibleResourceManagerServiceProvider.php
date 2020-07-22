@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class CollapsibleResourceManagerServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap any application services.
      *

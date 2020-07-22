@@ -22,7 +22,7 @@ class TopLevelResource extends AbstractResource
      * @var AbstractResource|null
      */
     protected $linkTo = null;
-    
+
     /**
      * @var bool
      */
@@ -49,56 +49,6 @@ class TopLevelResource extends AbstractResource
         $this->linkTo = $resource;
 
         return $this;
-    }
-
-    /**
-     * @param $resource
-     *
-     * @return AbstractResource
-     */
-    private function parseResource($resource): ?AbstractResource
-    {
-
-        $resource = value($resource);
-
-        if (is_subclass_of($resource, Resource::class)) {
-
-            return new NovaResource($resource);
-
-        }
-
-        return $resource;
-
-    }
-
-    private function getLinkTo(): ?AbstractResource
-    {
-        return once(function () {
-            return $this->parseResource(
-                $this->data->get('linkTo', $this->linkTo)
-            );
-        });
-    }
-
-    protected function getLabel(): ?string
-    {
-
-        /**
-         * Use set label if present
-         */
-        $label = parent::getLabel();
-
-        /**
-         * Otherwise try to find the label of the linkTo action
-         */
-        if (is_null($label) && ($linkTo = $this->getLinkTo())) {
-
-            return $linkTo->getLabel();
-
-        }
-
-        return $label;
-
     }
 
     /**
@@ -130,12 +80,62 @@ class TopLevelResource extends AbstractResource
             'type' => $this->type,
             'badge' => $this->getBadge(),
             'label' => $this->getLabel(),
-            'expanded' => $this->data->get("expanded", null),
+            'expanded' => $this->data->get('expanded', null),
             'icon' => $this->getIcon() ?: ($linkToResource ? $linkToResource->getIcon() : null),
             'linkTo' => $linkToResource,
-            'resources' => array_filter($resources)
+            'resources' => array_filter($resources),
         ];
 
+    }
+
+    protected function getLabel(): ?string
+    {
+
+        /**
+         * Use set label if present
+         */
+        $label = parent::getLabel();
+
+        /**
+         * Otherwise try to find the label of the linkTo action
+         */
+        if (is_null($label) && ($linkTo = $this->getLinkTo())) {
+
+            return $linkTo->getLabel();
+
+        }
+
+        return $label;
+
+    }
+
+    /**
+     * @param $resource
+     *
+     * @return AbstractResource
+     */
+    private function parseResource($resource): ?AbstractResource
+    {
+
+        $resource = value($resource);
+
+        if (is_subclass_of($resource, Resource::class)) {
+
+            return new NovaResource($resource);
+
+        }
+
+        return $resource;
+
+    }
+
+    private function getLinkTo(): ?AbstractResource
+    {
+        return once(function () {
+            return $this->parseResource(
+                $this->data->get('linkTo', $this->linkTo)
+            );
+        });
     }
 
 }

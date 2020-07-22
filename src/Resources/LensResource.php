@@ -50,9 +50,9 @@ class LensResource extends AbstractResource
                 'name' => 'lens',
                 'params' => [
                     'resourceName' => $this->resource::uriKey(),
-                    'lens' => $lensInstance->uriKey()
-                ]
-            ]
+                    'lens' => $lensInstance->uriKey(),
+                ],
+            ],
         ];
     }
 }

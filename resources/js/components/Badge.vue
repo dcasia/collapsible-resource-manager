@@ -2,7 +2,7 @@
 
     <div class="flex items-center">
 
-        <div class="dim">
+        <div :class="{ dim: dim }">
             <slot/>
         </div>
 
@@ -19,6 +19,9 @@
     export default {
         name: 'Badge',
         props: {
+            dim: {
+                type: Boolean
+            },
             label: {
                 type: String
             }

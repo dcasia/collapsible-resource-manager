@@ -19,7 +19,7 @@ class InternalLink extends AbstractResource
                 'path' => $this->data->get('path'),
                 'query' => $this->data->get('query'),
                 'params' => $this->data->get('params'),
-            ]
+            ],
         ];
     }
 }

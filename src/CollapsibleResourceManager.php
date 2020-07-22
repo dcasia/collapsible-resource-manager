@@ -23,7 +23,7 @@ class CollapsibleResourceManager extends Tool
     private $defaults = [
         'disable_default_resource_manager' => true,
         'remember_menu_state' => false,
-        'navigation' => []
+        'navigation' => [],
     ];
 
     public function __construct(array $config)
@@ -69,7 +69,7 @@ class CollapsibleResourceManager extends Tool
     {
         return view('collapsible-resource-manager::navigation', [
             'rememberMenuState' => $this->config[ 'remember_menu_state' ],
-            'navigation' => $this->parseNavigationResources($this->config[ 'navigation' ])
+            'navigation' => $this->parseNavigationResources($this->config[ 'navigation' ]),
         ]);
     }
 
