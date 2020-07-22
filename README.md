@@ -62,6 +62,7 @@ On the `navigation` key only `TopLevelResource` are allowed to be used, any othe
 ```php
 TopLevelResource::make([
     'label' => 'Resources',
+    'expanded' => null,
     'badge' => null,
     'icon' => null,
     'linkTo' => null, // accepts an instance of `NovaResource` or a Nova `Resource::class`
@@ -75,6 +76,9 @@ TopLevelResource::make([
     ]
 ]);
 ```
+
+Top-Level items aren't collapsible by default (`'expanded' => null`). If you set `expanded` to `true` or `false`, it will show a collapsible indicator on the right side of the heading. If `true`, it will be open by default, if `false` it will be closed by default.
+
 
 #### NovaResource
 
