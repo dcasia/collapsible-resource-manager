@@ -1,8 +1,8 @@
 <template>
 
-    <div class="flex items-center">
+    <div class="flex flex-1 items-center">
 
-        <div :class="{ dim: dim }">
+        <div :class="{ dim: dim }" class="flex-1">
             <slot/>
         </div>
 
