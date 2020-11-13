@@ -63,8 +63,8 @@ On the `navigation` key only `TopLevelResource` are allowed to be used, any othe
 TopLevelResource::make([
     'label' => 'Resources',
     'expanded' => null,
-    'badge' => null,
-    'icon' => null,
+    'badge' => null, // can be used to indicate the number of updates or notifications in this resource
+    'icon' => null, // HTML/SVG string or callback that produces one, see below
     'linkTo' => null, // accepts an instance of `NovaResource` or a Nova `Resource::class`
     'resources' => [
         NovaResource::make(...),
@@ -120,8 +120,8 @@ Internal Link is an easy way to manually direct user to an specific URL using th
 ```php
 InternalLink::make([
     'label' => 'My custom internal link',
-    'badge' => null,
-    'icon' => null,
+    'badge' => null, // can be used to indicate the number of updates or notifications in this resource
+    'icon' => null, // HTML/SVG string or callback that produces one, see below
     'target' => '_self',
     'path' => '/my/custom/resource/url',
     'params' => [ 'resourceId' => 1 ],
