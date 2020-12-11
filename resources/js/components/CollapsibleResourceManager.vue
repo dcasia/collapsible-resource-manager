@@ -3,7 +3,7 @@
     <div v-if="!isEmpty || data.linkTo" :class="[ data.type, { 'mb-8': isTopLevel }, 'select-none' ]">
 
         <component v-if="data.label && isTopLevel" v-bind="topLevelLink"
-                   @click="toggleTopLevel"
+                   @click="toggleTopLevel(data.id)"
                    :class="{ 'cursor-pointer': isTopCollapsible }"
                    class="flex flex-1 items-center font-normal text-white mb-2 text-base no-underline relative">
 
@@ -20,7 +20,7 @@
                     {{ data.label }}
                 </span>
 
-                <CollapsibleIndicator :expanded="topExpanded" :visible="isTopCollapsible"/>
+                <CollapsibleIndicator :expanded="topExpanded[data.id]" :visible="isTopCollapsible"/>
 
             </Badge>
 
@@ -29,7 +29,7 @@
         <CollapseTransition :duration="150">
 
             <ResourceList class="resources-only"
-                          v-if="isTopLevel && data.resources.length && (!isTopCollapsible || topExpanded)"
+                          v-if="isTopLevel && data.resources.length && (!isTopCollapsible || topExpanded[data.id])"
                           :resources="data.resources"
                           :recursive="recursive"
                           :remember-menu-state="rememberMenuState"/>
@@ -82,13 +82,27 @@
         },
         data() {
             return {
-                topExpanded: this.data.expanded,
+                topExpanded: { [ this.data.id ]: this.data.expanded },
                 activeMenu: { [ this.data.id ]: this.data.expanded }
             }
         },
         created() {
 
             if (this.rememberMenuState) {
+
+                const topState = localStorage.getItem(this.cacheTopKey)
+
+                if (topState) {
+
+                    this.topExpanded[ this.data.id ] = JSON.parse(topState)
+
+                }
+
+                this.$watch(() => this.topExpanded[ this.data.id ], topState => {
+
+                    localStorage.setItem(this.cacheTopKey, topState)
+
+                })
 
                 const state = localStorage.getItem(this.cacheKey)
 
@@ -117,6 +131,9 @@
             isTopLevel() {
                 return this.data.type === 'top_level'
             },
+            cacheTopKey() {
+                return `menu-top-state.${ this.data.id }`
+            },
             cacheKey() {
                 return `menu-state.${ this.data.id }`
             },
@@ -143,9 +160,9 @@
             }
         },
         methods: {
-            toggleTopLevel() {
+            toggleTopLevel(id) {
                 if (this.isTopCollapsible) {
-                    this.topExpanded = !this.topExpanded
+                    this.topExpanded[ id ] = !this.topExpanded[ id ]
                 }
             },
             toggleGroup(id) {
