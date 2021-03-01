@@ -41,7 +41,7 @@ class TopLevelResource extends AbstractResource
      */
     public function resources(): array
     {
-        return $this->data->get('resources', []);
+        return value($this->data->get('resources', []));
     }
 
     public function linkToResource(AbstractResource $resource): self

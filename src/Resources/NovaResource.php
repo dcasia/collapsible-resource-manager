@@ -34,7 +34,6 @@ class NovaResource extends AbstractResource
         $this->resource = $resource;
         $this->setIconFromResourceIfExists($resource);
         $this->setLabelFromResource($resource);
-
     }
 
     public function authorizedToSee(Request $request)
