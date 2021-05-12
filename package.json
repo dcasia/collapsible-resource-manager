@@ -10,7 +10,7 @@
     "devDependencies": {
         "cross-env": "^7.0.3",
         "laravel-mix": "^6.0.13",
-        "postcss": "^8.2.6",
+        "postcss": "^8.2.10",
         "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.12",
         "vue2-transitions": "^0.3.0"
