@@ -95,9 +95,18 @@ abstract class AbstractResource implements JsonSerializable
     /**
      * @param string $resource
      */
+    public function setBadgeFromResource(string $resource)
+    {
+        $this->badge(
+            method_exists($resource, 'badge') ? $resource::badge() : null
+        );
+    }
+
+    /**
+     * @param string $resource
+     */
     public function setLabelFromResource(string $resource)
     {
-
         if (is_subclass_of($resource, Resource::class)) {
 
             $this->label($resource::label());

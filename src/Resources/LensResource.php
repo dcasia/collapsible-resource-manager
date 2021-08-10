@@ -27,6 +27,7 @@ class LensResource extends AbstractResource
     {
         $this->resource = $resource;
         $this->lens = $lens;
+        $this->setBadgeFromResource($lens);
         $this->setIconFromResourceIfExists($lens);
         $this->setLabelFromResource($lens);
     }
