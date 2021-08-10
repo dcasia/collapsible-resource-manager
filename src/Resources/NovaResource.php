@@ -32,6 +32,7 @@ class NovaResource extends AbstractResource
     public function __construct(string $resource)
     {
         $this->resource = $resource;
+        $this->setBadgeFromResource($resource);
         $this->setIconFromResourceIfExists($resource);
         $this->setLabelFromResource($resource);
     }
