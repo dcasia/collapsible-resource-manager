@@ -69,11 +69,11 @@ abstract class AbstractResource implements JsonSerializable
     }
 
     /**
-     * @param string $label
+     * @param Closure|string $label
      *
      * @return AbstractResource
      */
-    public function label(string $label): self
+    public function label($label): self
     {
         $this->label = $label;
 
@@ -148,10 +148,9 @@ abstract class AbstractResource implements JsonSerializable
 
     protected function getAttribute(string $key): ?string
     {
+        if ($this->$key !== null) {
 
-        if ($this->$key) {
-
-            return is_callable($this->$key) ? call_user_func($this->$key) : $this->$key;
+            return value($this->$key);
 
         }
 
