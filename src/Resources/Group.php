@@ -10,7 +10,7 @@ class Group extends TopLevelResource
 
     public function authorizedToSee(Request $request)
     {
-        $authorized = collect($this->resources())->some(function (string $resource) use ($request) {
+        $authorized = collect($this->resources())->some(function (AbstractResource|string $resource) use ($request) {
             return $this->parseResource($resource)->authorizedToSee($request);
         });
 
