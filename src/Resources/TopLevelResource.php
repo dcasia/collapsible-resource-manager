@@ -114,7 +114,7 @@ class TopLevelResource extends AbstractResource
      *
      * @return AbstractResource
      */
-    private function parseResource($resource): ?AbstractResource
+    protected function parseResource($resource): ?AbstractResource
     {
 
         $resource = value($resource);
