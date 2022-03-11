@@ -75,7 +75,7 @@ abstract class AbstractResource implements JsonSerializable
      */
     public function label($label): self
     {
-        $this->label = $label;
+        $this->label = __($label);
 
         return $this;
     }
