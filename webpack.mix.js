@@ -1,5 +1,12 @@
 let mix = require('laravel-mix')
 
-mix.setPublicPath('dist')
-   .vue()
-   .js('resources/js/tool.js', 'js')
+require('./nova.mix')
+require('mix-tailwindcss')
+
+mix
+  .setPublicPath('dist')
+  .js('resources/js/tool.js', 'js')
+  .vue({ version: 3 })
+  .postCss('resources/css/card.css', 'css')
+  .tailwind()
+  .nova('digital-creative/collapsible-resource-manager')

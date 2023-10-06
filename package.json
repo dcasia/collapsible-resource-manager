@@ -1,19 +1,18 @@
 {
     "private": true,
     "scripts": {
-        "development": "mix",
         "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "production": "mix --production"
+        "production": "mix --production",
+        "nova:install": "npm --prefix='../../vendor/laravel/nova' ci"
     },
     "devDependencies": {
-        "cross-env": "^7.0.3",
+        "@vue/compiler-sfc": "^3.2.22",
         "laravel-mix": "^6.0.41",
-        "postcss": "^8.4.6",
-        "vue-loader": "^15.9.8",
-        "vue-template-compiler": "^2.6.14",
-        "vue2-transitions": "^0.3.0",
-        "vue": "^2.6.14"
+        "mix-tailwindcss": "^1.3.0",
+        "sass": "^1.69.0",
+        "sass-loader": "^13.3.2",
+        "tailwindcss": "^3.3.3",
+        "vue-collapsed": "^1.2.8",
+        "vue-loader": "^17.2.2"
     }
 }
