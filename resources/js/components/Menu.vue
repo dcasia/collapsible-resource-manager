@@ -85,12 +85,6 @@
         },
         async created() {
 
-            /**
-             * Yeah, double!
-             */
-            await nextTick()
-            await nextTick()
-
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
 
         },

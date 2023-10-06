@@ -1,6 +1,6 @@
 import Menu from './components/Menu.vue'
 import MockMenu from './components/MockMenu.vue'
-import { createVNode, render } from 'vue'
+import { createVNode, render, nextTick } from 'vue'
 
 Nova.booting(app => {
 
@@ -10,43 +10,47 @@ Nova.booting(app => {
     app.component('UserMenu', MockMenu)
 
     app.mixin({
-        mounted() {
+        async mounted() {
 
-            setTimeout(() => {
+            if (this._.type?.__file?.endsWith('MainMenu.vue')) {
 
-                if (this._.type?.__file?.endsWith('MainMenu.vue')) {
+                let count = 10
 
-                    let target = null
-                    let screen = this._.attrs[ 'data-screen' ]
+                /**
+                 * Make sure we are running this code in the last tick
+                 */
+                while (count--) {
+                    await nextTick()
+                }
 
-                    const container = document.createElement('div')
-                    container.id = `collapsible-resource-manager-${ screen }`
+                let target = null
+                let screen = this._.attrs[ 'data-screen' ]
 
-                    if (screen === 'desktop') {
-                        target = '#nova div[data-testid="content"] > div:first-child'
-                    }
+                const container = document.createElement('div')
+                container.id = `collapsible-resource-manager-${ screen }`
 
-                    if (screen === 'responsive') {
-                        target = '#nova div[dusk="sidebar-menu"][data-screen="responsive"]'
-                    }
+                if (screen === 'desktop') {
+                    target = '#nova div[data-testid="content"] > div:first-child'
+                }
 
-                    const element = document.querySelector(target)
+                if (screen === 'responsive') {
+                    target = '#nova div[dusk="sidebar-menu"][data-screen="responsive"]'
+                }
 
-                    if (element) {
+                let element = document.querySelector(target)
 
-                        element.replaceWith(container)
+                if (element) {
 
-                        const vnode = createVNode(Menu, { screen })
-                        vnode.appContext = app._context
+                    element.replaceWith(container)
 
-                        render(vnode, container)
+                    const vnode = createVNode(Menu, { screen })
+                    vnode.appContext = app._context
 
-                    }
+                    render(vnode, container)
 
                 }
 
-            })
-
+            }
 
         },
     })
