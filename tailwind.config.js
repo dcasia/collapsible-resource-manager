@@ -1,4 +1,4 @@
 module.exports = {
     ...require('../../vendor/laravel/nova/tailwind.config'),
-    important: '#collapsible-resource-manager',
+    important: 'div[id^="collapsible-resource-manager"]',
 }

@@ -4,30 +4,49 @@ import { createVNode, render } from 'vue'
 
 Nova.booting(app => {
 
-    app.component('MainMenu', MockMenu)
+    // app.component('MainMenu', MockMenu)
+    app.component('NotificationCenter', MockMenu)
+    app.component('ThemeDropdown', MockMenu)
+    app.component('UserMenu', MockMenu)
 
     app.mixin({
         mounted() {
 
-            if (this._.type?.__file?.endsWith('MockMenu.vue')) {
+            setTimeout(() => {
 
-                const container = document.createElement('div')
-                container.id = 'collapsible-resource-manager'
+                if (this._.type?.__file?.endsWith('MainMenu.vue')) {
 
-                const element = document.querySelector('#nova div[data-testid="content"] > div:first-child')
+                    let target = null
+                    let screen = this._.attrs[ 'data-screen' ]
 
-                if (element) {
+                    const container = document.createElement('div')
+                    container.id = `collapsible-resource-manager-${ screen }`
 
-                    element.replaceWith(container)
+                    if (screen === 'desktop') {
+                        target = '#nova div[data-testid="content"] > div:first-child'
+                    }
 
-                    const vnode = createVNode(Menu)
-                    vnode.appContext = app._context
+                    if (screen === 'responsive') {
+                        target = '#nova div[dusk="sidebar-menu"][data-screen="responsive"]'
+                    }
 
-                    render(vnode, container)
+                    const element = document.querySelector(target)
+
+                    if (element) {
+
+                        element.replaceWith(container)
+
+                        const vnode = createVNode(Menu, { screen })
+                        vnode.appContext = app._context
+
+                        render(vnode, container)
+
+                    }
 
                 }
 
-            }
+            })
+
 
         },
     })

@@ -1,6 +1,10 @@
 <template>
 
-    <div class="flex h-[calc(100vh-56px)]">
+    <div class="flex h-full whitespace-nowrap"
+         :class="{
+            'min-h-[calc(100vh-66px)]': screen === 'responsive',
+            'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
+         }">
 
         <div class="border-r border-gray-700 bg-gray-800 p-2 flex flex-col justify-between items-center">
 
@@ -8,33 +12,36 @@
 
                 <div v-for="menu of menus">
 
-                    <div class="hover:bg-gray-700 rounded w-[40px] h-[40px] flex justify-center items-center cursor-pointer"
+                    <button
+                        class="hover:bg-gray-700 rounded w-[40px] h-[40px] flex justify-center items-center cursor-pointer"
                         :class="{
-                        'text-primary-500': hasActiveMenu(menu),
-                        'bg-gray-900': menu === currentActiveMenu
-                     }"
+                            'text-primary-500': hasActiveMenu(menu),
+                            'bg-gray-900': menu === currentActiveMenu
+                        }"
                         v-tooltip="menu.name"
                         @click="setActiveMenu(menu)">
 
                         <Icon :type="menu.icon"/>
 
-                    </div>
+                    </button>
 
                 </div>
 
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1 flex flex-col justify-center items-center fixed bottom-2">
+                <NotificationCenter/>
                 <ThemeSwitcher/>
+                <hr class="border-gray-700 w-full" style="margin: 10px 0"/>
+                <UserMenu/>
             </div>
 
         </div>
 
-
-        <div
-            class="bg-[rgba(var(--colors-gray-500),0.05)] transition-width duration-300 flex overflow-x-hidden relative"
-            :class="{
-                'w-[240px] border-r border-gray-700': currentActiveMenu,
+        <div class="bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+             :class="{
+                'w-[240px] border-r border-gray-700': screen === 'desktop' && currentActiveMenu,
+                'w-full': screen === 'responsive',
                 'w-[0px] border-transparent': currentActiveMenu === null,
              }">
 
@@ -61,13 +68,15 @@
     import MenuItem from './MenuItem.vue'
     import MenuGroup from './MenuGroup.vue'
     import SectionHeader from './SectionHeader.vue'
-    import ThemeSwitcher from './ThemeSwitcher.vue'
+    import ThemeSwitcher from '../native/ThemeSwitcher.vue'
+    import NotificationCenter from '../native/NotificationCenter.vue'
     import { nextTick } from 'vue'
+    import UserMenu from '../native/UserMenu.vue'
 
     export default {
-        props: [ 'toolbar' ],
+        props: [ 'screen' ],
         emits: [ 'actionExecuted' ],
-        components: { MenuItem, MenuGroup, SectionHeader, ThemeSwitcher },
+        components: { UserMenu, MenuItem, MenuGroup, SectionHeader, ThemeSwitcher, NotificationCenter },
         data() {
             return {
                 currentActiveMenu: null,
@@ -94,7 +103,7 @@
             },
             activeMenuItems() {
 
-                const menu = this.currentActiveMenu.key !== this.storeActiveMenu.key ? this.currentActiveMenu : this.storeActiveMenu
+                const menu = this.currentActiveMenu.key !== this.storeActiveMenu?.key ? this.currentActiveMenu : this.storeActiveMenu
 
                 const groups = {
                     name: menu.name,
@@ -158,30 +167,63 @@
 
 <style lang="scss">
 
-
     #nova {
 
-        div[data-testid="content"] {
-            display: flex;
+        div[dusk="global-search-component"] {
+
+            max-width: 100%;
+
+            ~ div {
+                padding: 0;
+                margin: 0;
+            }
+
         }
 
-        div[data-testid="content"] > div:first-child {
-            position: relative;
+        @screen lg {
+
+            div[data-testid="content"] {
+                display: flex;
+            }
+
+            div[data-testid="content"] > div:first-child {
+                position: relative;
+            }
+
+            div[data-testid="content"] > div:last-child {
+                margin-left: 0;
+                flex: 1;
+                width: 0;
+            }
+
+            div[dusk="global-search-component"] {
+
+                @apply max-w-xs;
+
+                margin-left: auto;
+
+                ~ div {
+                    padding: 0;
+                    margin: 0;
+                }
+
+            }
+
         }
 
-        div[data-testid="content"] > div:last-child {
-            margin-left: 0;
-            flex: 1;
-            //width: 100%;
+        & > div:nth-child(1) > div > div > div.bg-white.dark\:bg-gray-800.relative.flex-1.flex.flex-col.max-w-xxs.w-full {
+            max-width: calc(100% - 56px);
         }
+
     }
 
-    #collapsible-resource-manager {
+    #collapsible-resource-manager-desktop {
 
         ~ div {
-            border-top-left-radius: 0px;
+            border-top-left-radius: 0;
         }
 
     }
+
 
 </style>

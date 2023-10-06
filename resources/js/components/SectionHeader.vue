@@ -1,7 +1,7 @@
 <template>
 
-    <h3 class="px-3 text-white text-md font-bold mt-4 flex justify-between"
-        :class="{ 'cursor-pointer': shouldBeCollapsed }"
+    <h3 class="px-3 text-gray-400 text-md font-bold mt-4 flex justify-between h-[14px] pb-4"
+        :class="{ 'cursor-pointer hover:text-gray-200': this.item.collapsable }"
         @click="toggleCollapseState">
 
         <slot/>
