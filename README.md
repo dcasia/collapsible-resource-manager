@@ -19,10 +19,10 @@ You can install the package via composer:
 composer require digital-creative/collapsible-resource-manager
 ```
 
-# Resource Icons
+# Usage
 
-This package can serve as a seamless replacement for Nova's default sidebar menu. 
-The only enhancement it introduces to the original Nova menu is the ability to call `->icon()` on the MenuItem class, allowing you to add an icon to each menu item.
+This package can serve as a seamless replacement for Nova's default sidebar menu.
+The only modification it makes to the original Nova menu is the addition of the `->icon()` method to the MenuItem class, which enables you to easily incorporate icons into each menu item.
 
 For all available options you can check nova documentation [here](https://nova.laravel.com/docs/customization/menus.html#menu-sections).
 
@@ -48,6 +48,24 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
 }
 ```
+
+## ⭐️ Show Your Support
+
+Please give a ⭐️ if this project helped you!
+
+### Other Packages You Might Like
+
+- [Collapsible Resource Manager](https://github.com/dcasia/collapsible-resource-manager) - Provides an easy way to order and group your resources on the sidebar.
+- [Resource Navigation Tab](https://github.com/dcasia/resource-navigation-tab) - Organize your resource fields into tabs.
+- [Resource Navigation Link](https://github.com/dcasia/resource-navigation-link) - Create links to internal or external resources.
+- [Nova Mega Filter](https://github.com/dcasia/nova-mega-filter) - Display all your filters in a card instead of a tiny dropdown!
+- [Nova Pill Filter](https://github.com/dcasia/nova-pill-filter) - A Laravel Nova filter that renders into clickable pills.
+- [Nova Slider Filter](https://github.com/dcasia/nova-slider-filter) - A Laravel Nova filter for picking range between a min/max value.
+- [Nova Range Input Filter](https://github.com/dcasia/nova-range-input-filter) - A Laravel Nova range input filter.
+- [Nova FilePond](https://github.com/dcasia/nova-filepond) - A Nova field for uploading File, Image and Video using Filepond.
+- [Custom Relationship Field](https://github.com/dcasia/custom-relationship-field) - Emulate HasMany relationship without having a real relationship set between resources.
+- [Column Toggler](https://github.com/dcasia/column-toggler) - A Laravel Nova package that allows you to hide/show columns in the index view.
+- [Batch Edit Toolbar](https://github.com/dcasia/batch-edit-toolbar) - Allows you to update a single column of a resource all at once directly from the index page.
 
 ## License
 
