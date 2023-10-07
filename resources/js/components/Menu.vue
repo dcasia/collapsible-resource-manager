@@ -75,11 +75,12 @@
     import SectionHeader from './SectionHeader.vue'
     import UserMenu from '../native/UserMenu.vue'
     import SvgIcon from './SvgIcon.vue'
+    import MenuSection from './MenuSection.vue'
 
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
         emits: [ 'actionExecuted' ],
-        components: { SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader },
+        components: { SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader, MenuSection },
         data() {
             return {
                 currentActiveMenu: null,
@@ -89,6 +90,13 @@
         async created() {
 
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
+
+            /**
+             * if there is a path and no items we don't open the panel on page load
+             */
+            if (this.currentActiveMenu?.path !== '' && this.currentActiveMenu?.items?.length === 0) {
+                this.currentActiveMenu = null
+            }
 
         },
         computed: {
@@ -130,6 +138,10 @@
         methods: {
             recursiveFind(menus) {
 
+                if (menus.active === true) {
+                    return menus
+                }
+
                 if (Array.isArray(menus)) {
 
                     for (const item of menus) {
@@ -142,14 +154,10 @@
 
                     }
 
-                } else if (menus.items) {
-
-                    return this.recursiveFind(menus.items)
-
                 }
 
-                if (menus.active === true) {
-                    return menus
+                if (menus.items) {
+                    return this.recursiveFind(menus.items)
                 }
 
             },
@@ -157,11 +165,27 @@
                 return this.recursiveFind(menu)
             },
             setActiveMenu(menu) {
-                if (this.currentActiveMenu === menu) {
+
+                if (menu.items.length === 0 && menu.path) {
+
+                    Nova.visit(menu.path)
+
                     this.currentActiveMenu = null
-                } else {
-                    this.currentActiveMenu = menu
+
+                    return
+
                 }
+
+                if (this.currentActiveMenu === menu) {
+
+                    this.currentActiveMenu = null
+
+                } else {
+
+                    this.currentActiveMenu = menu
+
+                }
+
             },
         },
     }
