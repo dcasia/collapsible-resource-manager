@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace DigitalCreative\CollapsibleResourceManager;
 
 use Illuminate\Support\ServiceProvider;
@@ -16,8 +18,10 @@ class CollapsibleResourceManagerServiceProvider extends ServiceProvider
         });
 
         Nova::serving(function (ServingNova $event): void {
+
             Nova::script('collapsible-resource-manager', __DIR__ . '/../dist/js/tool.js');
             Nova::style('collapsible-resource-manager', __DIR__ . '/../dist/css/card.css');
+
         });
     }
 }
