@@ -9,7 +9,7 @@
             <div class="mt-2">
 
                 <div v-for="item of item.items">
-                    <component :is="item.component" :item="item"/>
+                    <MenuItem :item="item"/>
                 </div>
 
             </div>
