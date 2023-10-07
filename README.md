@@ -21,8 +21,8 @@ composer require digital-creative/collapsible-resource-manager
 
 # Resource Icons
 
-This package can be used as a drop-in replacement for the default nova sidebar menu, the only addition to the original nova menu,
-is that now you can also call ->icon() on the MenuItem class to add an icon to the menu item.
+This package can serve as a seamless replacement for Nova's default sidebar menu. 
+The only enhancement it introduces to the original Nova menu is the ability to call `->icon()` on the MenuItem class, allowing you to add an icon to each menu item.
 
 For all available options you can check nova documentation [here](https://nova.laravel.com/docs/customization/menus.html#menu-sections).
 
@@ -32,24 +32,16 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
     public function boot(): void
     {
         //...
-        Nova::mainMenu(function (Request $request): array {
-    
+        Nova::mainMenu(function (Request $request): array {    
             return [
-    
                 MenuSection::make('Content', [
-    
                     MenuGroup::make('User Base', [
-    
                         MenuItem::resource(User::class)->icon('<svg>...</svg>'),
                         MenuItem::resource(Article::class)->icon('annotation'),
                         MenuItem::resource(Comment::class)->icon('chat-alt'),
-    
                     ]),
-    
                 ])->icon('lightning-bolt')->collapsable(),
-    
-            ];
-    
+            ];    
         });
         //...
     }
