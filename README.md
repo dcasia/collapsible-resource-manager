@@ -5,8 +5,8 @@
 [![License](https://img.shields.io/packagist/l/digital-creative/collapsible-resource-manager)](https://github.com/dcasia/collapsible-resource-manager/blob/master/LICENSE)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/nova4/screenshots/dark.png">
-  <img alt="Laravel Nova Collapsible Resource Manager in action" src="https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/nova4/screenshots/light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/main/screenshots/dark.png">
+  <img alt="Laravel Nova Collapsible Resource Manager in action" src="https://raw.githubusercontent.com/dcasia/collapsible-resource-manager/main/screenshots/light.png">
 </picture>
 
 Provides an easy way to order and group your resources on the sidebar.
