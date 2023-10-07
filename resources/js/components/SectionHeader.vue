@@ -1,12 +1,12 @@
 <template>
 
-    <h3 class="px-3 text-gray-400 text-md font-bold mt-4 flex justify-between h-[14px] pb-4"
-        :class="{ 'cursor-pointer hover:text-gray-200': this.item.collapsable }"
+    <h3 class="px-3 text-gray-500 dark:text-gray-400 text-md font-bold mt-4 flex justify-between h-[14px] pb-4"
+        :class="{ 'cursor-pointer hover:text-gray-400 dark:hover:text-gray-200': this.item.collapsable }"
         @click="toggleCollapseState">
 
         <slot/>
 
-        <Icon v-if="item.collapsable"
+        <SvgIcon v-if="item.collapsable"
               class="transition-transform"
               type="chevron-right"
               :class="{ 'rotate-90': !shouldBeCollapsed }"
@@ -24,10 +24,11 @@
 
     import { Collapse } from 'vue-collapsed'
     import Collapsable from '@/mixins/Collapsable'
+    import SvgIcon from './SvgIcon.vue'
 
     export default {
         mixins: [ Collapsable ],
-        components: { Collapse },
+        components: { SvgIcon, Collapse },
         props: [ 'item' ],
         methods: {
             toggleCollapseState() {

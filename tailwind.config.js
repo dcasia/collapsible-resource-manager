@@ -1,4 +1,15 @@
+const { theme, ...theRest } = require('../../vendor/laravel/nova/tailwind.config')
+
 module.exports = {
-    ...require('../../vendor/laravel/nova/tailwind.config'),
+    ...theRest,
+    theme: {
+        ...theme,
+        extend: {
+            ...theme.extend,
+            transitionProperty: {
+                width: 'width',
+            },
+        },
+    },
     important: 'div[id^="collapsible-resource-manager"]',
 }

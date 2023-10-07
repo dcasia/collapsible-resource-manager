@@ -6,22 +6,22 @@
             'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
          }">
 
-        <div class="border-r border-gray-700 bg-gray-800 p-2 flex flex-col justify-between items-center">
+        <div class="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
 
             <div class="space-y-1">
 
                 <div v-for="menu of menus">
 
                     <button
-                        class="hover:bg-gray-700 rounded w-[40px] h-[40px] flex justify-center items-center cursor-pointer"
+                        class="hover:bg-gray-200 dark:hover:bg-gray-700 rounded w-[40px] h-[40px] flex justify-center items-center cursor-pointer"
                         :class="{
                             'text-primary-500': hasActiveMenu(menu),
-                            'bg-gray-900': menu === currentActiveMenu
+                            'bg-gray-100 dark:bg-gray-900': menu === currentActiveMenu
                         }"
                         v-tooltip="menu.name"
                         @click="setActiveMenu(menu)">
 
-                        <Icon :type="menu.icon"/>
+                        <SvgIcon :type="menu.icon"/>
 
                     </button>
 
@@ -30,17 +30,22 @@
             </div>
 
             <div class="space-y-1 flex flex-col justify-center items-center fixed bottom-2">
-                <NotificationCenter/>
-                <ThemeSwitcher/>
-                <hr class="border-gray-700 w-full" style="margin: 10px 0"/>
+
+                <component :is="NotificationCenter" v-if="notificationCenterEnabled"/>
+                <component :is="ThemeDropdown" v-if="themeSwitcherEnabled"/>
+
+                <hr v-if="themeSwitcherEnabled || notificationCenterEnabled"
+                    class="border-gray-200 dark:border-gray-700 w-full" style="margin: 10px 0"/>
+
                 <UserMenu/>
+
             </div>
 
         </div>
 
-        <div class="bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
-             :class="{
-                'w-[240px] border-r border-gray-700': screen === 'desktop' && currentActiveMenu,
+        <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+            :class="{
+                'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
                 'w-full': screen === 'responsive',
                 'w-[0px] border-transparent': currentActiveMenu === null,
              }">
@@ -68,15 +73,13 @@
     import MenuItem from './MenuItem.vue'
     import MenuGroup from './MenuGroup.vue'
     import SectionHeader from './SectionHeader.vue'
-    import ThemeSwitcher from '../native/ThemeSwitcher.vue'
-    import NotificationCenter from '../native/NotificationCenter.vue'
-    import { nextTick } from 'vue'
     import UserMenu from '../native/UserMenu.vue'
+    import SvgIcon from './SvgIcon.vue'
 
     export default {
-        props: [ 'screen' ],
+        props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
         emits: [ 'actionExecuted' ],
-        components: { UserMenu, MenuItem, MenuGroup, SectionHeader, ThemeSwitcher, NotificationCenter },
+        components: { SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader },
         data() {
             return {
                 currentActiveMenu: null,
@@ -94,6 +97,12 @@
             },
             menus() {
                 return this.$store.getters[ 'mainMenu' ]
+            },
+            notificationCenterEnabled() {
+                return Nova.config('notificationCenterEnabled')
+            },
+            themeSwitcherEnabled() {
+                return Nova.config('themeSwitcherEnabled')
             },
             activeMenuItems() {
 
@@ -160,6 +169,18 @@
 </script>
 
 <style lang="scss">
+
+    #nova > div > header {
+        @apply border-b border-gray-200;
+    }
+
+    .dark #nova > div > header {
+        @apply border-b border-gray-700;
+    }
+
+    div[dusk="notifications-backdrop"] {
+        opacity: 0.25;
+    }
 
     #nova {
 
