@@ -55,6 +55,7 @@ Please give a ⭐️ if this project helped you!
 
 ### Other Packages You Might Like
 
+- [Expandable Table Row](https://github.com/dcasia/expandable-table-row) - Provides an easy way to append extra data to each row of your resource tables.
 - [Collapsible Resource Manager](https://github.com/dcasia/collapsible-resource-manager) - Provides an easy way to order and group your resources on the sidebar.
 - [Resource Navigation Tab](https://github.com/dcasia/resource-navigation-tab) - Organize your resource fields into tabs.
 - [Resource Navigation Link](https://github.com/dcasia/resource-navigation-link) - Create links to internal or external resources.
