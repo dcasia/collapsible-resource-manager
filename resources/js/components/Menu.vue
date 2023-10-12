@@ -168,7 +168,7 @@
 
                 if (menu.items.length === 0 && menu.path) {
 
-                    Nova.visit(menu.path)
+                    Nova.visit(menu.path.replace(new RegExp(`^${ Nova.config('base') }`), ''))
 
                     this.currentActiveMenu = null
 
