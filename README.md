@@ -49,6 +49,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 }
 ```
 
+## Configuration
+
+You can also enable/disable the main header menu handling. For example, if you don't want the user menu, theme switcher,
+and notification icon to be moved to the bottom left side, you can manually disable it by adding these lines to your Nova config file:
+
+```php
+// config/nova.php
+
+'vendors' => [
+    'collapsible_resource_manager' => [
+        'move_user_menu' => false,
+        'move_theme_switcher' => false,
+        'move_notification_center' => false
+    ]
+]
+```
+
 ## ⭐️ Show Your Support
 
 Please give a ⭐️ if this project helped you!

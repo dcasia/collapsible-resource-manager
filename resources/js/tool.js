@@ -2,6 +2,15 @@ import Menu from './components/Menu.vue'
 import Noop from './components/Noop.vue'
 import { createVNode, render, nextTick } from 'vue'
 
+const version = parseFloat(Nova.config('version').replaceAll('.', ''))
+const config = Nova.config('collapsible_resource_manager')
+
+const settings = {
+    UserMenu: config.move_user_menu,
+    NotificationCenter: config.move_notification_center,
+    ThemeDropdown: config.move_theme_switcher,
+}
+
 Nova.booting(app => {
 
     const components = {
@@ -20,6 +29,14 @@ Nova.booting(app => {
          */
         if ([ 'NotificationCenter', 'UserMenu', 'ThemeDropdown', 'MainMenu' ].includes(name)) {
 
+            for (const key in settings) {
+
+                if (key === name && settings[ key ] === false) {
+                    return componentFn.call(this, name, component)
+                }
+
+            }
+
             components[ name ] = component
 
             return componentFn.call(this, name, Noop)
@@ -31,11 +48,29 @@ Nova.booting(app => {
     }
 
     app.mixin({
+        data() {
+            return {
+                toDestroy: [],
+            }
+        },
         async mounted() {
+
+            if (this._.type?.__file?.endsWith('GlobalSearch.vue')) {
+
+                if (settings.UserMenu && settings.NotificationCenter && settings.ThemeDropdown) {
+                    this._.vnode.el.classList.add('handle-global-search-component')
+                }
+
+            }
 
             if (this._.type?.name === 'Noop') {
 
                 const screen = this._.attrs[ 'data-screen' ]
+                const mobile = this._.attrs[ 'mobile' ]
+
+                if (mobile) {
+                    this._.vnode.el?.parentElement?.classList?.add('hidden')
+                }
 
                 if (screen === undefined) {
                     return
@@ -53,17 +88,21 @@ Nova.booting(app => {
                 const container = document.createElement('div')
                 container.id = `collapsible-resource-manager-${ screen }`
 
-                let target = null
+                let element = null
 
                 if (screen === 'desktop') {
-                    target = '#nova div[data-testid="content"] > div:first-child'
+                    element = document.querySelector('#nova div[data-testid="content"] > div:first-child')
                 }
 
                 if (screen === 'responsive') {
-                    target = '#nova div[dusk="sidebar-menu"][data-screen="responsive"]'
-                }
 
-                let element = document.querySelector(target)
+                    if (version <= 42713) {
+                        element = this._.vnode.el
+                    } else {
+                        element = this._.vnode.el.parentElement.parentElement
+                    }
+
+                }
 
                 if (element) {
 
@@ -74,8 +113,17 @@ Nova.booting(app => {
 
                     render(vnode, container)
 
+                    this.toDestroy.push(container)
+
                 }
 
+            }
+
+        },
+        unmounted() {
+
+            for (const element of this.toDestroy) {
+                render(null, element)
             }
 
         },

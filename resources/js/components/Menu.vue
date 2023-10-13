@@ -2,7 +2,7 @@
 
     <div class="flex h-full whitespace-nowrap"
          :class="{
-            'min-h-[calc(100vh-66px)]': screen === 'responsive',
+            'min-h-[calc(100vh-50px)]': screen === 'responsive',
             'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
          }">
 
@@ -29,24 +29,26 @@
 
             </div>
 
-            <div class="space-y-1 flex flex-col justify-center items-center fixed bottom-2">
+            <div v-if="hasLowerMenu" class="space-y-2 flex flex-col justify-center items-center fixed bottom-0 pb-2 pt-4 left-0 w-14 bg-white dark:bg-gray-800">
 
-                <component :is="NotificationCenter" v-if="notificationCenterEnabled"/>
-                <component :is="ThemeDropdown" v-if="themeSwitcherEnabled"/>
+                <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent -mt-14 h-10 w-full pointer-events-none"/>
 
-                <hr v-if="themeSwitcherEnabled || notificationCenterEnabled"
+                <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
+                <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
+
+                <hr v-if="config.move_user_menu && (themeSwitcherEnabled || notificationCenterEnabled)"
                     class="border-gray-200 dark:border-gray-700 w-full" style="margin: 10px 0"/>
 
-                <UserMenu/>
+                <UserMenu v-if="config.move_user_menu"/>
 
             </div>
 
         </div>
 
-        <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+        <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
             :class="{
                 'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
-                'w-full': screen === 'responsive',
+                'w-full dark:border-r dark:border-gray-700': screen === 'responsive',
                 'w-[0px] border-transparent': currentActiveMenu === null,
              }">
 
@@ -100,6 +102,18 @@
 
         },
         computed: {
+            config() {
+                return Nova.config('collapsible_resource_manager')
+            },
+            hasLowerMenu() {
+
+                if (this.config.move_user_menu || this.config.move_notification_center || this.config.move_theme_switcher) {
+                    return true
+                }
+
+                return this.themeSwitcherEnabled || this.notificationCenterEnabled
+
+            },
             storeActiveMenu() {
                 return this.recursiveFind(this.menus)
             },
@@ -208,7 +222,7 @@
 
     #nova {
 
-        div[dusk="global-search-component"] {
+        div[dusk="global-search-component"].handle-global-search-component {
 
             max-width: 100%;
 
@@ -235,7 +249,7 @@
                 width: 0;
             }
 
-            div[dusk="global-search-component"] {
+            div[dusk="global-search-component"].handle-global-search-component {
 
                 @apply max-w-xs;
 
@@ -262,6 +276,10 @@
             border-top-left-radius: 0;
         }
 
+    }
+
+    #collapsible-resource-manager-responsive ~ div{
+        background-color: red !important;
     }
 
 
