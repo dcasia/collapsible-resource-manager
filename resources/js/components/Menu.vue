@@ -46,7 +46,7 @@
         </div>
 
         <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
-            :class="{
+             :class="{
                 'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
                 'w-full dark:border-r dark:border-gray-700': screen === 'responsive',
                 'w-[0px] border-transparent': currentActiveMenu === null,
@@ -78,6 +78,7 @@
     import UserMenu from '../native/UserMenu.vue'
     import SvgIcon from './SvgIcon.vue'
     import MenuSection from './MenuSection.vue'
+    import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
@@ -118,7 +119,23 @@
                 return this.recursiveFind(this.menus)
             },
             menus() {
-                return this.$store.getters[ 'mainMenu' ]
+
+                /**
+                 * For whatever reason, laravel nova sometimes returns some menu items with null items within...
+                 * so this filter them out to avoid the panel expanding blank
+                 */
+                const menus = cloneDeep(this.$store.getters[ 'mainMenu' ])
+
+                for (const menu of menus) {
+
+                    if (menu.items.length) {
+                        menu.items = menu.items.filter(item => item.component !== null)
+                    }
+
+                }
+
+                return menus
+
             },
             notificationCenterEnabled() {
                 return Nova.config('notificationCenterEnabled')
@@ -277,10 +294,5 @@
         }
 
     }
-
-    #collapsible-resource-manager-responsive ~ div{
-        background-color: red !important;
-    }
-
 
 </style>
