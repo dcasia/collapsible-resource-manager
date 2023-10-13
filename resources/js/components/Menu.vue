@@ -29,9 +29,9 @@
 
             </div>
 
-            <div v-if="hasLowerMenu" class="space-y-2 flex flex-col justify-center items-center fixed bottom-0 pb-2 pt-4 left-0 w-[56px] bg-white dark:bg-gray-800">
+            <div v-if="hasLowerMenu" class="space-y-2 flex flex-col justify-center items-center fixed bottom-0 pb-2 pt-4 left-0 w-14 bg-white dark:bg-gray-800">
 
-                <div class="bg-gradient-to-t from-gray-800 to-transparent -mt-14 h-10 w-full pointer-events-none"/>
+                <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent -mt-14 h-10 w-full pointer-events-none"/>
 
                 <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
                 <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
