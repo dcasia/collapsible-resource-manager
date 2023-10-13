@@ -6,8 +6,7 @@
             'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
          }">
 
-        <div
-            class="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
+        <div class="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
 
             <div class="space-y-1">
 
@@ -44,8 +43,7 @@
 
         </div>
 
-        <div
-            class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+        <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
             :class="{
                 'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
                 'w-full': screen === 'responsive',
