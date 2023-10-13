@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 return [
-    'move_user_menu' => false,
-    'move_theme_switcher' => false,
-    'move_notification_center' => false,
+    'move_user_menu' => true,
+    'move_theme_switcher' => true,
+    'move_notification_center' => true,
 ];
