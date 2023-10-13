@@ -19,9 +19,20 @@ class CollapsibleResourceManagerServiceProvider extends ServiceProvider
 
         Nova::serving(function (ServingNova $event): void {
 
+            Nova::provideToScript([
+                'collapsible_resource_manager' => config('nova.vendors.collapsible_resource_manager'),
+            ]);
+
             Nova::script('collapsible-resource-manager', __DIR__ . '/../dist/js/tool.js');
             Nova::style('collapsible-resource-manager', __DIR__ . '/../dist/css/card.css');
 
         });
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/nova.php', 'nova.vendors.collapsible_resource_manager',
+        );
     }
 }
