@@ -1,6 +1,6 @@
 <template>
 
-    <template v-if="type.trimStart().startsWith('<svg')">
+    <template v-if="type?.trim()?.startsWith('<svg')">
         <div v-html="type"/>
     </template>
 

@@ -2,6 +2,7 @@ import Menu from './components/Menu.vue'
 import Noop from './components/Noop.vue'
 import { createVNode, render, nextTick } from 'vue'
 
+const version = parseFloat(Nova.config('version').replaceAll('.', ''))
 const config = Nova.config('collapsible_resource_manager')
 
 const settings = {
@@ -65,6 +66,11 @@ Nova.booting(app => {
             if (this._.type?.name === 'Noop') {
 
                 const screen = this._.attrs[ 'data-screen' ]
+                const mobile = this._.attrs[ 'mobile' ]
+
+                if (mobile) {
+                    this._.vnode.el?.parentElement?.classList?.add('hidden')
+                }
 
                 if (screen === undefined) {
                     return
@@ -82,17 +88,21 @@ Nova.booting(app => {
                 const container = document.createElement('div')
                 container.id = `collapsible-resource-manager-${ screen }`
 
-                let target = null
+                let element = null
 
                 if (screen === 'desktop') {
-                    target = '#nova div[data-testid="content"] > div:first-child'
+                    element = document.querySelector('#nova div[data-testid="content"] > div:first-child')
                 }
 
                 if (screen === 'responsive') {
-                    target = '#nova div[dusk="sidebar-menu"][data-screen="responsive"]'
-                }
 
-                let element = document.querySelector(target)
+                    if (version <= 42713) {
+                        element = this._.vnode.el
+                    } else {
+                        element = this._.vnode.el.parentElement.parentElement
+                    }
+
+                }
 
                 if (element) {
 
