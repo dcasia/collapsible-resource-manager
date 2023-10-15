@@ -4677,6 +4677,11 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
 
+scrollbooster@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/scrollbooster/-/scrollbooster-3.0.2.tgz#c1f0da4322321a165c70751b51e13f62177f26be"
+  integrity sha512-WZjvtSxCgCEbfc+9DmxfhuK6ACOqQr3jymniIp4I9Hh0mIEK1CKS4t+d7iPdeuILP5Q/we13h4YUHD0o+gPiRg==
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
