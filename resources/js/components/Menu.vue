@@ -2,16 +2,16 @@
 
     <div class="flex h-full whitespace-nowrap"
          :class="{
-            'min-h-[calc(100vh-50px)]': screen === 'responsive',
-            'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
+            'min-h-[calc(100vh-50px)]': isMobile,
+            'lg:flex hidden min-h-[calc(100vh-56px)]': isDesktop
          }">
 
         <div ref="viewport"
              :style="{ height: viewportSidebarHeight }"
-             :class="{ 'overflow-hidden': screen === 'responsive' }"
+             :class="{ 'overflow-hidden': isMobile, 'border-r border-gray-200 dark:border-gray-700': isDesktop }"
              class="bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
 
-            <div ref="content" class="space-y-1" :class="{ 'pointer-events-none' : isDragging }">
+            <div ref="content" class="space-y-1" :class="{ 'pointer-events-none': isDragging && isMobile }">
 
                 <div v-for="menu of menus">
 
@@ -34,18 +34,23 @@
 
             <div ref="fixedMenu"
                  v-if="hasLowerMenu"
-                 :class="{ 'fixed': screen === 'responsive', 'sticky': screen === 'desktop' }"
-                 class="space-y-2 flex flex-col justify-center items-center bottom-0 pb-2 pt-4 mt-4 bg-white dark:bg-gray-800">
+                 :class="{ 'fixed': isMobile, 'sticky': isDesktop }"
+                 class="bottom-0 bg-white dark:bg-gray-800">
 
-                <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent absolute -top-10 h-10 w-full pointer-events-none"/>
+                <div class="pb-2 flex flex-col justify-center items-center pt-4 mt-4 space-y-2">
 
-                <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
-                <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
+                    <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent absolute -top-10 h-10 w-full pointer-events-none"/>
 
-                <hr v-if="config.move_user_menu && (themeSwitcherEnabled || notificationCenterEnabled)"
-                    class="border-gray-200 dark:border-gray-700 w-full" style="margin: 10px 0"/>
+                    <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
+                    <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
 
-                <UserMenu v-if="config.move_user_menu"/>
+                    <hr v-if="config.move_user_menu && (themeSwitcherEnabled || notificationCenterEnabled)"
+                        class="border-gray-200 dark:border-gray-700 w-full"
+                        style="margin: 10px 0"/>
+
+                    <UserMenu v-if="config.move_user_menu"/>
+
+                </div>
 
             </div>
 
@@ -53,16 +58,19 @@
 
         <div ref="viewportPanel"
              :style="{ height: viewportSidePanelHeight }"
-             class="border-l bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+             class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
              :class="{
-                'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
-                'w-full dark:border-r dark:border-gray-700 overflow-y-hidden': screen === 'responsive',
+                'w-[240px] border-r border-gray-200 dark:border-gray-700': isDesktop && currentActiveMenu,
+                'w-full dark:border-r dark:border-gray-700 overflow-y-hidden border-l': isMobile,
                 'w-[0px] border-transparent': currentActiveMenu === null,
              }">
 
             <FadeTransition>
 
-                <div ref="panel" v-if="currentActiveMenu" class="flex flex-col w-full px-2 py-2" :class="{ 'pointer-events-none' : isDragging }">
+                <div ref="panel"
+                     v-if="currentActiveMenu"
+                     class="flex flex-col w-full px-2 py-2"
+                     :class="{ 'pointer-events-none': isDragging }">
 
                     <div v-for="item of activeMenuItems">
                         <component :key="item.key" :is="item.component" :item="item"/>
@@ -95,6 +103,8 @@
         components: { SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader, MenuSection },
         data() {
             return {
+                isMobile: this.screen === 'responsive',
+                isDesktop: this.screen === 'desktop',
                 isDragging: false,
                 sidebarScrollBooster: null,
                 sidePanelScrollBooster: null,
@@ -119,7 +129,11 @@
         watch: {
             '$store.getters.mainMenuShown'(isMainMenuShown) {
 
-                if (this.$refs.fixedMenu && isMainMenuShown) {
+                if (this.isDesktop) {
+                    return
+                }
+
+                if (isMainMenuShown === true) {
 
                     const offset = 40 + 25
                     const { height } = this.$refs.fixedMenu.getBoundingClientRect()
@@ -266,7 +280,7 @@
 
                 }
 
-                if (this.currentActiveMenu === menu) {
+                if (this.currentActiveMenu?.key === menu?.key) {
 
                     this.currentActiveMenu = null
 
