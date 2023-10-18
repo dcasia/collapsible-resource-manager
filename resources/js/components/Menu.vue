@@ -1,6 +1,6 @@
 <template>
 
-    <div class="flex h-full whitespace-nowrap"
+    <div class="flex h-full"
          :class="{
             'min-h-[calc(100vh-50px)]': screen === 'responsive',
             'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
