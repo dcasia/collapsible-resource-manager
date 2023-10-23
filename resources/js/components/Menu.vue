@@ -207,7 +207,7 @@
 
                 }
 
-                if (this.currentActiveMenu === menu) {
+                if (this.currentActiveMenu?.key === menu?.key) {
 
                     this.currentActiveMenu = null
 
