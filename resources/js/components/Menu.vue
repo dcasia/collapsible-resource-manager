@@ -252,15 +252,15 @@
 
         @screen lg {
 
-            div[data-testid="content"] {
+            div[dusk="content"] {
                 display: flex;
             }
 
-            div[data-testid="content"] > div:first-child {
+            div[dusk="content"] > div:first-child {
                 position: relative;
             }
 
-            div[data-testid="content"] > div:last-child {
+            div[dusk="content"] > div:last-child {
                 margin-left: 0;
                 flex: 1;
                 width: 0;
