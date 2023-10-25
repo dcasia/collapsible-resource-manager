@@ -91,7 +91,7 @@ Nova.booting(app => {
                 let element = null
 
                 if (screen === 'desktop') {
-                    element = document.querySelector('#nova div[data-testid="content"] > div:first-child')
+                    element = document.querySelector('#nova div[dusk="content"] > div:first-child')
                 }
 
                 if (screen === 'responsive') {
