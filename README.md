@@ -63,8 +63,8 @@ and notification icon to be moved to the bottom left side, you can manually disa
         'move_theme_switcher' => false,
         'move_notification_center' => false
         'section_title' => true,
-        'auto_collapse_desktop_menu' => true,
-        'auto_collapse_mobile_menu' => true,
+        'collapse_on_select' => true,
+        'collapse_on_refresh' => false,
     ]
 ]
 ```
