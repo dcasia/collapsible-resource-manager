@@ -56,10 +56,11 @@
              :style="{ height: viewportSidePanelHeight }"
              class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
              :class="{
-                'w-[320px] border-r border-gray-200 dark:border-gray-700': isDesktop && currentActiveMenu,
-                'w-full dark:border-r dark:border-gray-700 overflow-y-hidden border-l': isMobile,
-                'w-[0px] border-transparent': isEmptyMenu,
-             }">
+                'w-[320px] border-r border-gray-200 dark:border-gray-700': isDesktop && mainMenuShown,
+                'w-full dark:border-r dark:border-gray-700 overflow-y-hidden border-l': isMobile && mainMenuShown,
+                'w-[0px] border-transparent': !mainMenuShown,
+             }"
+             >
 
             <FadeTransition>
 
@@ -74,7 +75,7 @@
                                 {{ currentActiveMenu.name }}
                             </div>
                             <div v-if="screen === 'desktop'">
-                                <CollapseButton :show="currentActiveMenu" @click="collapseDesktopMenu" />
+                                <CollapseButton :show="currentActiveMenu" @click="collapseMenu" />
                             </div>
                         </div>
                         <div v-for="item of activeMenuItems">
@@ -94,8 +95,7 @@
 
 <script>
 
-
-import CollapseButton from './CollapseButton.vue'
+    import CollapseButton from './CollapseButton.vue'
     import MenuItem from './MenuItem.vue'
     import MenuGroup from './MenuGroup.vue'
     import SectionHeader from './SectionHeader.vue'
@@ -105,12 +105,13 @@ import CollapseButton from './CollapseButton.vue'
     import cloneDeep from 'lodash/cloneDeep'
     import ScrollBooster from 'scrollbooster'
     import ClickOutside from '../lib/ClickOutsideDirective.js'
-    import { mapState, mapMutations } from 'vuex'
+    import MenuMixin from '../mixins/MenuMixin.js'
     import { watch } from 'vue'
     
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
         emits: [ 'actionExecuted' ],
+        mixins: [ MenuMixin ],
         components: { CollapseButton, SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader, MenuSection },
         directives: { ClickOutside },
         data() {
@@ -126,13 +127,13 @@ import CollapseButton from './CollapseButton.vue'
             }
         },
         created() {
-            const storage = this.getFromLocalStorage();
-
-            this.currentActiveMenu = storage.currentActiveMenu;
-            this.currentActiveSection = storage.currentActiveSection;
-
+            this.restoreFromLocalStorage();
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
 
+            if (this.config.collapse_on_refresh) {
+                this.collapseMenu();  
+            }
+            
             /**
              * if there is a path and no items we don't open the panel on page load
              */
@@ -191,15 +192,11 @@ import CollapseButton from './CollapseButton.vue'
             },
         },
         computed: {
-            ...mapState(['mainMenuShown']),
             isMobile() {
                 return this.screen == 'responsive'
             },
             isDesktop() {
                 return this.screen == 'desktop'
-            },
-            config() {
-                return Nova.config('collapsible_resource_manager')
             },
             hasLowerMenu() {
 
@@ -270,7 +267,6 @@ import CollapseButton from './CollapseButton.vue'
             },
         },
         methods: {
-            ...mapMutations(['toggleMainMenu']),
             recursiveFind(menus) {
 
                 if (menus.active === true) {
@@ -296,42 +292,22 @@ import CollapseButton from './CollapseButton.vue'
                 }
 
             },
-            getFromLocalStorage() {
-                return JSON.parse(sessionStorage.getItem('nova.collapsibleResourceManager')) || {};
-            },
-
-            saveToLocalStorage() {
-                const data = {
-                    currentActiveMenu: this.currentActiveMenu,
-                    currentActiveSection: this.currentActiveSection
-                }
-            
-                sessionStorage.setItem('nova.collapsibleResourceManager', JSON.stringify(data));
-            },
-            collapseDesktopMenu() {
-                this.currentActiveMenu = null;
-            },
-            onClickOutside() {
-                if (this.config.auto_collapse_desktop_menu && this.currentActiveMenu && this.isDesktop) {
-                    this.currentActiveMenu = null;
-                }
-            },
             hasActiveMenu(menu) {
                 return menu.key === this.currentActiveSection?.key
             },
             setActiveMenu(menu) {
-                 this.currentActiveSection = menu;
+                this.currentActiveSection = menu;
 
                 if (menu.items.length === 0 && menu.path) {
-                    this.toggleMainMenu();
+                    this.collapseMenu()
                     Nova.visit(menu.path.replace(new RegExp(`^${ Nova.config('base') }`), ''))
                     this.currentActiveMenu = null
                 } else if (this.currentActiveMenu?.key === menu?.key) {
-                    this.currentActiveMenu = null
+                    this.toggleMainMenu();
                 } else {
+                    this.openMenu()
                     this.currentActiveMenu = menu
                 }
-
                 this.saveToLocalStorage()
             }
         },

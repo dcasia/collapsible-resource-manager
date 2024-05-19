@@ -35,10 +35,12 @@
     import omit from 'lodash/omit'
     import SvgIcon from './SvgIcon.vue'
     import { mapMutations } from 'vuex'
+    import MenuMixin from '../mixins/MenuMixin.js'
 
     export default {
         extends: MenuItem,
         components: { SvgIcon },
+        mixins: [ MenuMixin ],
         data() {
             return { omit }
         },
@@ -47,11 +49,10 @@
             return { store }
         },
         methods: {
-            ...mapMutations(['toggleMainMenu']),
             handleClick(evt) {
-                this.toggleMainMenu()
-                this.$emit('click', this.item)
-                //this.parent.handleClick(evt)            
+                if (this.config.collapse_on_select) {
+                    this.$store.state.mainMenuShown = false
+                }
             }
         }
     }
