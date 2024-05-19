@@ -106,7 +106,6 @@
     import ScrollBooster from 'scrollbooster'
     import ClickOutside from '../lib/ClickOutsideDirective.js'
     import MenuMixin from '../mixins/MenuMixin.js'
-    import { watch } from 'vue'
     
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
@@ -123,17 +122,17 @@
                 viewportSidePanelHeight: 'auto',
                 currentActiveMenu: null,
                 currentActiveSection: null,
-                open: false,
             }
         },
         created() {
+            
             this.restoreFromLocalStorage();
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
 
-            if (this.config.collapse_on_refresh) {
+            if (this.isDesktop && this.config.collapse_on_refresh) {
                 this.collapseMenu();  
             }
-            
+
             /**
              * if there is a path and no items we don't open the panel on page load
              */
@@ -148,8 +147,6 @@
             '$store.getters.mainMenuShown': {
                 immediate: true,
                 handler: function(isMainMenuShown) {
-                    console.log(`isMainMenuShown:=${isMainMenuShown}, mobile:=${this.isMobile}, ${this.screen}`)      
-
                     if (!this.isMobile) return;
                     if (isMainMenuShown) {
                         

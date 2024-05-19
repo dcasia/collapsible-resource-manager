@@ -13,7 +13,10 @@ export default {
 
             this.currentActiveMenu = storage.currentActiveMenu
             this.currentActiveSection = storage.currentActiveSection
-            this.$store.state.mainMenuShown = storage.mainMenuShown    
+
+            if (this.isDesktop) {
+                this.$store.state.mainMenuShown = storage.mainMenuShown
+            }
         },
 
         saveToLocalStorage() {
