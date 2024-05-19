@@ -30,10 +30,11 @@
 </template>
 
 <script>
-
+    import { useStore } from 'vuex'
     import MenuItem from '@/components/Menu/MenuItem.vue'
     import omit from 'lodash/omit'
     import SvgIcon from './SvgIcon.vue'
+    import { mapMutations } from 'vuex'
 
     export default {
         extends: MenuItem,
@@ -41,6 +42,18 @@
         data() {
             return { omit }
         },
+        setup () {
+            const store = useStore()
+            return { store }
+        },
+        methods: {
+            ...mapMutations(['toggleMainMenu']),
+            handleClick(evt) {
+                this.toggleMainMenu()
+                this.$emit('click', this.item)
+                //this.parent.handleClick(evt)            
+            }
+        }
     }
 
 </script>
