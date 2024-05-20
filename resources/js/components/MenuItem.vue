@@ -30,11 +30,11 @@
 </template>
 
 <script>
+
     import { useStore } from 'vuex'
     import MenuItem from '@/components/Menu/MenuItem.vue'
     import omit from 'lodash/omit'
     import SvgIcon from './SvgIcon.vue'
-    import { mapMutations } from 'vuex'
     import MenuMixin from '../mixins/MenuMixin.js'
 
     export default {
@@ -44,17 +44,18 @@
         data() {
             return { omit }
         },
-        setup () {
-            const store = useStore()
-            return { store }
+        setup() {
+            return {
+                store: useStore(),
+            }
         },
         methods: {
-            handleClick(evt) {
+            handleClick() {
                 if (this.config.collapse_on_select) {
                     this.$store.state.mainMenuShown = false
                 }
-            }
-        }
+            },
+        },
     }
 
 </script>

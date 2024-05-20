@@ -1,7 +1,6 @@
 <template>
 
-   <div class="flex h-full whitespace-nowrap"
-         v-click-outside="onClickOutside"
+    <div class="flex h-full whitespace-nowrap" v-click-outside="onClickOutside"
          :class="{
             'min-h-[calc(100vh-50px)]': isMobile,
             'lg:flex hidden min-h-[calc(100vh-56px)]': isDesktop
@@ -11,8 +10,11 @@
              :class="{ 'overflow-hidden': isMobile, 'border-r border-gray-200 dark:border-gray-700': isDesktop }"
              class="bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
 
-            <div ref="content" class="space-y-1 border-red-2" :class="{ 'pointer-events-none': isDragging && isMobile }">
+            <div ref="content" class="space-y-1 border-red-2"
+                 :class="{ 'pointer-events-none': isDragging && isMobile }">
+
                 <div v-for="menu of menus">
+
                     <button
                         class="hover:bg-gray-200 dark:hover:bg-gray-700 rounded w-[40px] h-[40px] flex justify-center items-center cursor-pointer"
                         :class="{
@@ -23,7 +25,9 @@
                         @click="setActiveMenu(menu)">
 
                         <SvgIcon :type="menu.icon"/>
+
                     </button>
+
                 </div>
 
             </div>
@@ -59,28 +63,31 @@
                 'w-[320px] border-r border-gray-200 dark:border-gray-700': isDesktop && mainMenuShown,
                 'w-full dark:border-r dark:border-gray-700 overflow-y-hidden border-l': isMobile && mainMenuShown,
                 'w-[0px] border-transparent': !mainMenuShown,
-             }"
-             >
+             }">
 
             <FadeTransition>
 
-                <div ref="panel" class="flex flex-col w-full px-2 py-2"
-                    :class="{
-                        'pointer-events-none': isDragging 
-                    }">
+                <div ref="panel" class="flex flex-col w-full px-2 py-2" :class="{ 'pointer-events-none': isDragging }">
+
                     <template v-if="currentActiveMenu">
-                        <div v-if="config.section_title" class="px-3 py-1 text-primary-500 text-lg font-bold border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                            <div>
-                                <SvgIcon :type="currentActiveMenu.icon"/>
+
+                        <div v-if="config.section_title"
+                             class="px-3 py-1 text-primary-500 text-lg font-bold border-b border-gray-200 dark:border-gray-700 flex items-center justify-between mb-1">
+
+                            <div class="flex space-x-2">
                                 {{ currentActiveMenu.name }}
                             </div>
-                            <div v-if="screen === 'desktop'">
-                                <CollapseButton :show="currentActiveMenu" @click="collapseMenu" />
+
+                            <div v-if="isDesktop">
+                                <CollapseButton :show="currentActiveMenu" @click="collapseMenu"/>
                             </div>
+
                         </div>
+
                         <div v-for="item of activeMenuItems">
                             <component :key="item.key" :is="item.component" :item="item"/>
                         </div>
+
                     </template>
 
                 </div>
@@ -106,7 +113,7 @@
     import ScrollBooster from 'scrollbooster'
     import ClickOutside from '../lib/ClickOutsideDirective.js'
     import MenuMixin from '../mixins/MenuMixin.js'
-    
+
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
         emits: [ 'actionExecuted' ],
@@ -125,12 +132,12 @@
             }
         },
         created() {
-            
-            this.restoreFromLocalStorage();
+
+            this.restoreFromLocalStorage()
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
 
             if (this.isDesktop && this.config.collapse_on_refresh) {
-                this.collapseMenu();  
+                this.collapseMenu()
             }
 
             /**
@@ -139,18 +146,24 @@
             if (this.currentActiveMenu?.path !== '' && this.currentActiveMenu?.items?.length === 0) {
                 this.currentActiveMenu = null
             }
+
         },
         unmounted() {
-            this.saveToLocalStorage();
+            this.saveToLocalStorage()
         },
         watch: {
             '$store.getters.mainMenuShown': {
                 immediate: true,
-                handler: function(isMainMenuShown) {
-                    if (!this.isMobile) return;
+                handler: isMainMenuShown => {
+
+                    if (!this.isMobile) {
+                        return
+                    }
+
                     if (isMainMenuShown) {
-                        
-                    this.$nextTick(() => {
+
+                        this.$nextTick(() => {
+
                             const offset = 40 + 25
                             const { height } = this.$refs.fixedMenu.getBoundingClientRect()
 
@@ -158,6 +171,7 @@
                             this.viewportSidePanelHeight = `${ window.innerHeight - 40 - 10 }px`
 
                             if (this.$refs.content?.childNodes.length) {
+
                                 this.sidebarScrollBooster = new ScrollBooster({
                                     viewport: this.$refs.viewport,
                                     content: this.$refs.content,
@@ -166,9 +180,11 @@
                                     lockScrollOnDragDirection: 'all',
                                     onUpdate: state => this.isDragging = state.isDragging,
                                 })
+
                             }
 
                             if (this.$refs.panel?.childNodes.length) {
+
                                 this.sidePanelScrollBooster = new ScrollBooster({
                                     viewport: this.$refs.viewportPanel,
                                     content: this.$refs.panel,
@@ -177,23 +193,29 @@
                                     lockScrollOnDragDirection: 'all',
                                     onUpdate: state => this.isDragging = state.isDragging,
                                 })
+
                             }
+
                         })
+
                     } else {
+
                         this.sidebarScrollBooster?.destroy()
                         this.sidePanelScrollBooster?.destroy()
                         this.sidebarScrollBooster = null
                         this.sidePanelScrollBooster = null
+
                     }
+
                 },
             },
         },
         computed: {
             isMobile() {
-                return this.screen == 'responsive'
+                return this.screen === 'responsive'
             },
             isDesktop() {
-                return this.screen == 'desktop'
+                return this.screen === 'desktop'
             },
             hasLowerMenu() {
 
@@ -236,9 +258,11 @@
                 return Nova.config('themeSwitcherEnabled')
             },
             activeMenuItems() {
+
                 const menu = this.currentActiveMenu?.key !== this.storeActiveMenu?.key ? this.currentActiveMenu : this.storeActiveMenu
 
                 if (!this.config.section_title) {
+
                     const groups = {
                         name: menu.name,
                         key: menu.key,
@@ -253,13 +277,12 @@
                     if (groups.items.length) {
                         return items.concat(groups)
                     }
-                    
-                    return items;
 
-                } else {  
-                    return menu.items
-                        .filter(Boolean)
+                    return items
+
                 }
+
+                return menu.items.filter(Boolean)
 
             },
         },
@@ -293,20 +316,30 @@
                 return menu.key === this.currentActiveSection?.key
             },
             setActiveMenu(menu) {
-                this.currentActiveSection = menu;
+
+                this.currentActiveSection = menu
 
                 if (menu.items.length === 0 && menu.path) {
+
                     this.collapseMenu()
-                    Nova.visit(menu.path.replace(new RegExp(`^${ Nova.config('base') }`), ''))
                     this.currentActiveMenu = null
+
+                    Nova.visit(menu.path.replace(new RegExp(`^${ Nova.config('base') }`), ''))
+
                 } else if (this.currentActiveMenu?.key === menu?.key) {
-                    this.toggleMainMenu();
+
+                    this.toggleMainMenu()
+
                 } else {
+
                     this.openMenu()
                     this.currentActiveMenu = menu
+
                 }
+
                 this.saveToLocalStorage()
-            }
+
+            },
         },
     }
 

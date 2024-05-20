@@ -2,13 +2,12 @@ import Menu from './components/Menu.vue'
 import Noop from './components/Noop.vue'
 import { createVNode, render, nextTick } from 'vue'
 
-
 function getNovaVersion() {
-    const [version] = Nova.config('version').replaceAll('.', '').trim().match(/^\d+/)
-    return parseFloat(version.length < 5?version.padEnd(5,0):version);
+    const [ version ] = Nova.config('version').replaceAll('.', '').trim().match(/^\d+/)
+    return parseFloat(version.length < 5 ? version.padEnd(5, 0) : version)
 }
 
-const version = getNovaVersion();
+const version = getNovaVersion()
 const config = Nova.config('collapsible_resource_manager')
 
 const settings = {
@@ -34,10 +33,13 @@ Nova.booting(app => {
          * Here we grab these components to render later into a different place
          */
         if ([ 'NotificationCenter', 'UserMenu', 'ThemeDropdown', 'MainMenu' ].includes(name)) {
+
             for (const key in settings) {
+
                 if (key === name && settings[ key ] === false) {
                     return componentFn.call(this, name, component)
                 }
+
             }
 
             components[ name ] = component
@@ -78,6 +80,7 @@ Nova.booting(app => {
             */
 
             if (this._.type?.name === 'Noop') {
+
                 const screen = this._.attrs[ 'data-screen' ]
                 const mobile = this._.attrs[ 'mobile' ]
 
@@ -108,11 +111,13 @@ Nova.booting(app => {
                 }
 
                 if (screen === 'responsive') {
+
                     if (version <= 42713) {
                         element = this._.vnode.el
                     } else {
                         element = this._.vnode.el.parentElement.parentElement
                     }
+
                 }
 
                 if (element) {

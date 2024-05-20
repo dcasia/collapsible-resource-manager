@@ -7,6 +7,6 @@ return [
     'move_theme_switcher' => true,
     'move_notification_center' => false,
     'section_title' => true,
-    'collapse_on_select' => true,
+    'collapse_on_select' => false,
     'collapse_on_refresh' => false,
 ];

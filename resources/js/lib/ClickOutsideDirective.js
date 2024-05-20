@@ -1,13 +1,18 @@
 export default {
-    mounted: function (el, binding) {
-        el.clickOutsideEvent = function (event) {
-            if (!(el == event.target || el.contains(event.target))) {
-            binding.value(event, el)
+    mounted: function (element, binding) {
+
+        element.clickOutsideEvent = function (event) {
+
+            if (!(element === event.target || element.contains(event.target))) {
+                binding.value(event, element)
             }
+
         }
-        document.addEventListener("click", el.clickOutsideEvent)
+
+        document.addEventListener('click', element.clickOutsideEvent)
+
     },
-    unmounted: function (el) {
-        document.removeEventListener("click", el.clickOutsideEvent)
+    unmounted: element => {
+        document.removeEventListener('click', element.clickOutsideEvent)
     },
 }
