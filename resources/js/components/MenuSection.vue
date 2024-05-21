@@ -1,7 +1,5 @@
 <template>
-
     <MenuItem :item="item"/>
-
 </template>
 
 <script>

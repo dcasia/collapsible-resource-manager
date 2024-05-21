@@ -31,15 +31,30 @@
 
 <script>
 
+    import { useStore } from 'vuex'
     import MenuItem from '@/components/Menu/MenuItem.vue'
     import omit from 'lodash/omit'
     import SvgIcon from './SvgIcon.vue'
+    import MenuMixin from '../mixins/MenuMixin.js'
 
     export default {
         extends: MenuItem,
         components: { SvgIcon },
+        mixins: [ MenuMixin ],
         data() {
             return { omit }
+        },
+        setup() {
+            return {
+                store: useStore(),
+            }
+        },
+        methods: {
+            handleClick() {
+                if (this.config.collapse_on_select) {
+                    this.$store.state.mainMenuShown = false
+                }
+            },
         },
     }
 

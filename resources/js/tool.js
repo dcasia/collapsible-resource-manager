@@ -2,7 +2,12 @@ import Menu from './components/Menu.vue'
 import Noop from './components/Noop.vue'
 import { createVNode, render, nextTick } from 'vue'
 
-const version = parseFloat(Nova.config('version').replaceAll('.', ''))
+function getNovaVersion() {
+    const [ version ] = Nova.config('version').replaceAll('.', '').trim().match(/^\d+/)
+    return parseFloat(version.length < 5 ? version.padEnd(5, 0) : version)
+}
+
+const version = getNovaVersion()
 const config = Nova.config('collapsible_resource_manager')
 
 const settings = {
@@ -60,8 +65,19 @@ Nova.booting(app => {
                 if (settings.UserMenu && settings.NotificationCenter && settings.ThemeDropdown) {
                     this._.vnode.el.classList.add('handle-global-search-component')
                 }
-
             }
+
+            /*
+            if (this._.type?.__file?.endsWith('AppLogo.vue')) {
+                const element = this._.vnode.el.parentElement.parentElement;
+                const container = document.createElement('div')
+                container.className = 'hidden md:inline'
+                container.id = `collapsible-resource-manager-collapse-button`
+
+                element.insertAdjacentElement('afterend', container)
+                this.toDestroy.push(container)
+            }
+            */
 
             if (this._.type?.name === 'Noop') {
 
@@ -112,7 +128,6 @@ Nova.booting(app => {
                     vnode.appContext = app._context
 
                     render(vnode, container)
-
                     this.toDestroy.push(container)
 
                 }

@@ -1,14 +1,17 @@
 <template>
 
-    <div class="flex h-full"
+    <div class="flex h-full whitespace-nowrap" v-click-outside="onClickOutside"
          :class="{
-            'min-h-[calc(100vh-50px)]': screen === 'responsive',
-            'lg:flex hidden min-h-[calc(100vh-56px)]': screen === 'desktop'
+            'min-h-[calc(100vh-50px)]': isMobile,
+            'lg:flex hidden min-h-[calc(100vh-56px)]': isDesktop
          }">
 
-        <div class="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
+        <div ref="viewport"
+             :class="{ 'overflow-hidden': isMobile, 'border-r border-gray-200 dark:border-gray-700': isDesktop }"
+             class="bg-white dark:bg-gray-800 p-2 flex flex-col justify-between items-center">
 
-            <div class="space-y-1">
+            <div ref="content" class="space-y-1 border-red-2"
+                 :class="{ 'pointer-events-none': isDragging && isMobile }">
 
                 <div v-for="menu of menus">
 
@@ -29,36 +32,63 @@
 
             </div>
 
-            <div v-if="hasLowerMenu" class="space-y-2 flex flex-col justify-center items-center fixed bottom-0 pb-2 pt-4 left-0 w-14 bg-white dark:bg-gray-800">
+            <div ref="fixedMenu"
+                 v-if="hasLowerMenu"
+                 :class="{ 'fixed': isMobile, 'sticky': isDesktop }"
+                 class="bottom-0 bg-white dark:bg-gray-800">
 
-                <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent -mt-14 h-10 w-full pointer-events-none"/>
+                <div class="pb-2 flex flex-col justify-center items-center pt-4 mt-4 space-y-2">
 
-                <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
-                <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
+                    <div class="bg-gradient-to-t from-white dark:from-gray-800 to-transparent absolute -top-10 h-10 w-full pointer-events-none"/>
 
-                <hr v-if="config.move_user_menu && (themeSwitcherEnabled || notificationCenterEnabled)"
-                    class="border-gray-200 dark:border-gray-700 w-full" style="margin: 10px 0"/>
+                    <component :is="NotificationCenter" v-if="config.move_notification_center && notificationCenterEnabled"/>
+                    <component :is="ThemeDropdown" v-if="config.move_theme_switcher && themeSwitcherEnabled"/>
 
-                <UserMenu v-if="config.move_user_menu"/>
+                    <hr v-if="config.move_user_menu && (themeSwitcherEnabled || notificationCenterEnabled)"
+                        class="border-gray-200 dark:border-gray-700 w-full"
+                        style="margin: 10px 0"/>
+
+                    <UserMenu v-if="config.move_user_menu"/>
+
+                </div>
 
             </div>
 
         </div>
 
-        <div class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
+        <div ref="viewportPanel"
+             :style="{ height: viewportSidePanelHeight }"
+             class="bg-[rgba(var(--colors-gray-50))] dark:bg-[rgba(var(--colors-gray-900),.65)] lg:dark:bg-[rgba(var(--colors-gray-500),.05)] transition-width duration-300 flex overflow-x-hidden relative"
              :class="{
-                'w-[240px] border-r border-gray-200 dark:border-gray-700': screen === 'desktop' && currentActiveMenu,
-                'w-full dark:border-r dark:border-gray-700': screen === 'responsive',
-                'w-[0px] border-transparent': currentActiveMenu === null,
+                'w-[320px] border-r border-gray-200 dark:border-gray-700': isDesktop && mainMenuShown,
+                'w-full dark:border-r dark:border-gray-700 overflow-y-hidden border-l': isMobile && mainMenuShown,
+                'w-[0px] border-transparent': !mainMenuShown,
              }">
 
             <FadeTransition>
 
-                <div v-if="currentActiveMenu" class="flex flex-col w-full px-2 py-2">
+                <div ref="panel" class="flex flex-col w-full px-2 py-2" :class="{ 'pointer-events-none': isDragging }">
 
-                    <div v-for="item of activeMenuItems">
-                        <component :key="item.key" :is="item.component" :item="item"/>
-                    </div>
+                    <template v-if="currentActiveMenu">
+
+                        <div v-if="config.section_title"
+                             class="px-3 py-1 text-primary-500 text-lg font-bold border-b border-gray-200 dark:border-gray-700 flex items-center justify-between mb-1">
+
+                            <div class="flex space-x-2">
+                                {{ currentActiveMenu.name }}
+                            </div>
+
+                            <div v-if="isDesktop">
+                                <CollapseButton :show="currentActiveMenu" @click="collapseMenu"/>
+                            </div>
+
+                        </div>
+
+                        <div v-for="item of activeMenuItems">
+                            <component :key="item.key" :is="item.component" :item="item"/>
+                        </div>
+
+                    </template>
 
                 </div>
 
@@ -72,6 +102,7 @@
 
 <script>
 
+    import CollapseButton from './CollapseButton.vue'
     import MenuItem from './MenuItem.vue'
     import MenuGroup from './MenuGroup.vue'
     import SectionHeader from './SectionHeader.vue'
@@ -79,20 +110,35 @@
     import SvgIcon from './SvgIcon.vue'
     import MenuSection from './MenuSection.vue'
     import cloneDeep from 'lodash/cloneDeep'
+    import ScrollBooster from 'scrollbooster'
+    import ClickOutside from '../lib/ClickOutsideDirective.js'
+    import MenuMixin from '../mixins/MenuMixin.js'
 
     export default {
         props: [ 'screen', 'NotificationCenter', 'ThemeDropdown' ],
         emits: [ 'actionExecuted' ],
-        components: { SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader, MenuSection },
+        mixins: [ MenuMixin ],
+        components: { CollapseButton, SvgIcon, UserMenu, MenuItem, MenuGroup, SectionHeader, MenuSection },
+        directives: { ClickOutside },
         data() {
             return {
+                isDragging: false,
+                sidebarScrollBooster: null,
+                sidePanelScrollBooster: null,
+                viewportSidebarHeight: 'auto',
+                viewportSidePanelHeight: 'auto',
                 currentActiveMenu: null,
-                open: false,
+                currentActiveSection: null,
             }
         },
-        async created() {
+        created() {
 
+            this.restoreFromLocalStorage()
             this.currentActiveMenu = this.currentActiveMenu ?? this.storeActiveMenu
+
+            if (this.isDesktop && this.config.collapse_on_refresh) {
+                this.collapseMenu()
+            }
 
             /**
              * if there is a path and no items we don't open the panel on page load
@@ -102,9 +148,74 @@
             }
 
         },
+        unmounted() {
+            this.saveToLocalStorage()
+        },
+        watch: {
+            '$store.getters.mainMenuShown': {
+                immediate: true,
+                handler: isMainMenuShown => {
+
+                    if (!this.isMobile) {
+                        return
+                    }
+
+                    if (isMainMenuShown) {
+
+                        this.$nextTick(() => {
+
+                            const offset = 40 + 25
+                            const { height } = this.$refs.fixedMenu.getBoundingClientRect()
+
+                            this.viewportSidebarHeight = `${ window.innerHeight - height - offset }px`
+                            this.viewportSidePanelHeight = `${ window.innerHeight - 40 - 10 }px`
+
+                            if (this.$refs.content?.childNodes.length) {
+
+                                this.sidebarScrollBooster = new ScrollBooster({
+                                    viewport: this.$refs.viewport,
+                                    content: this.$refs.content,
+                                    scrollMode: 'transform',
+                                    direction: 'vertical',
+                                    lockScrollOnDragDirection: 'all',
+                                    onUpdate: state => this.isDragging = state.isDragging,
+                                })
+
+                            }
+
+                            if (this.$refs.panel?.childNodes.length) {
+
+                                this.sidePanelScrollBooster = new ScrollBooster({
+                                    viewport: this.$refs.viewportPanel,
+                                    content: this.$refs.panel,
+                                    scrollMode: 'transform',
+                                    direction: 'vertical',
+                                    lockScrollOnDragDirection: 'all',
+                                    onUpdate: state => this.isDragging = state.isDragging,
+                                })
+
+                            }
+
+                        })
+
+                    } else {
+
+                        this.sidebarScrollBooster?.destroy()
+                        this.sidePanelScrollBooster?.destroy()
+                        this.sidebarScrollBooster = null
+                        this.sidePanelScrollBooster = null
+
+                    }
+
+                },
+            },
+        },
         computed: {
-            config() {
-                return Nova.config('collapsible_resource_manager')
+            isMobile() {
+                return this.screen === 'responsive'
+            },
+            isDesktop() {
+                return this.screen === 'desktop'
             },
             hasLowerMenu() {
 
@@ -117,6 +228,9 @@
             },
             storeActiveMenu() {
                 return this.recursiveFind(this.menus)
+            },
+            isEmptyMenu() {
+                return !this.currentActiveMenu
             },
             menus() {
 
@@ -145,24 +259,30 @@
             },
             activeMenuItems() {
 
-                const menu = this.currentActiveMenu.key !== this.storeActiveMenu?.key ? this.currentActiveMenu : this.storeActiveMenu
+                const menu = this.currentActiveMenu?.key !== this.storeActiveMenu?.key ? this.currentActiveMenu : this.storeActiveMenu
 
-                const groups = {
-                    name: menu.name,
-                    key: menu.key,
-                    component: 'menu-group',
-                    items: [],
+                if (!this.config.section_title) {
+
+                    const groups = {
+                        name: menu.name,
+                        key: menu.key,
+                        component: 'menu-group',
+                        items: [],
+                    }
+
+                    const items = menu.items
+                        .map(item => item.component === 'menu-item' ? groups.items.push(item) : item)
+                        .filter(Boolean)
+
+                    if (groups.items.length) {
+                        return items.concat(groups)
+                    }
+
+                    return items
+
                 }
 
-                const items = menu.items
-                    .map(item => item.component === 'menu-item' ? groups.items.push(item) : item)
-                    .filter(Boolean)
-
-                if (groups.items.length) {
-                    return items.concat(groups)
-                }
-
-                return items
+                return menu.items.filter(Boolean)
 
             },
         },
@@ -193,29 +313,31 @@
 
             },
             hasActiveMenu(menu) {
-                return this.recursiveFind(menu)
+                return menu.key === this.currentActiveSection?.key
             },
             setActiveMenu(menu) {
 
+                this.currentActiveSection = menu
+
                 if (menu.items.length === 0 && menu.path) {
+
+                    this.collapseMenu()
+                    this.currentActiveMenu = null
 
                     Nova.visit(menu.path.replace(new RegExp(`^${ Nova.config('base') }`), ''))
 
-                    this.currentActiveMenu = null
+                } else if (this.currentActiveMenu?.key === menu?.key) {
 
-                    return
-
-                }
-
-                if (this.currentActiveMenu?.key === menu?.key) {
-
-                    this.currentActiveMenu = null
+                    this.toggleMainMenu()
 
                 } else {
 
+                    this.openMenu()
                     this.currentActiveMenu = menu
 
                 }
+
+                this.saveToLocalStorage()
 
             },
         },
