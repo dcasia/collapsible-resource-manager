@@ -154,7 +154,7 @@
         watch: {
             '$store.getters.mainMenuShown': {
                 immediate: true,
-                handler: isMainMenuShown => {
+                handler(isMainMenuShown) {
 
                     if (!this.isMobile) {
                         return
