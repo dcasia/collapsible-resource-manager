@@ -11,11 +11,11 @@
         v-bind="omit(linkAttributes, 'data.icon')"
         @click="handleClick">
 
-        <SvgIcon :type="item.data?.icon ?? item.icon" class="mr-2 min-w-[24px]"/>
+        <SvgIcon :name="item.data?.icon ?? item.icon" class="mr-2 min-w-[24px]"/>
 
         {{ item.name }}
 
-        <SvgIcon v-if="item.external" type="external-link" :width="16" class="hidden group-hover:block ml-auto"/>
+        <SvgIcon v-if="item.external" name="arrow-top-right-on-square" type="micro" class="hidden group-hover:block ml-auto"/>
 
         <div v-if="item.badge" class="ml-auto">
 

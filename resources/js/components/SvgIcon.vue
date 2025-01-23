@@ -1,17 +1,17 @@
 <template>
 
-    <template v-if="type?.trim()?.startsWith('<svg')">
-        <div v-html="type"/>
+    <template v-if="name?.trim()?.startsWith('<svg')">
+        <div v-html="name"/>
     </template>
-
-    <Icon v-else :type="type" :width="width"/>
-
+    <Icon v-else :name="name" :type="type"/>
 </template>
 
 <script>
+import {Icon} from 'laravel-nova-ui'
 
-    export default {
-        props: [ 'type', 'width' ],
-    }
+export default {
+    components: {Icon},
+    props: ['name', 'type'],
+}
 
 </script>
