@@ -7,10 +7,9 @@
         <slot/>
 
         <SvgIcon v-if="item.collapsable"
-              class="transition-transform"
-              type="chevron-right"
-              :class="{ 'rotate-90': !shouldBeCollapsed }"
-              :width="14"/>
+              class="transition-transform max-w-[14px]"
+              name="chevron-right"
+              :class="{ 'rotate-90': !shouldBeCollapsed }"/>
 
     </h3>
 

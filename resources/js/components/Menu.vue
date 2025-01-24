@@ -24,7 +24,7 @@
                         v-tooltip="menu.name"
                         @click="setActiveMenu(menu)">
 
-                        <SvgIcon :type="menu.icon"/>
+                        <SvgIcon :name="menu.icon"/>
 
                     </button>
 
