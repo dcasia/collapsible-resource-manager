@@ -61,7 +61,7 @@ and notification icon to be moved to the bottom left side, you can manually disa
     'collapsible_resource_manager' => [
         'move_user_menu' => false,
         'move_theme_switcher' => false,
-        'move_notification_center' => false
+        'move_notification_center' => false,
         'section_title' => true,
         'collapse_on_select' => true,
         'collapse_on_refresh' => false,
